@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #F7F7F7;
+        }
+        .container {
+            background-color: #FFFFFF;
+            border: 1px solid #DDDDDD;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px #DDDDDD;
+            width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .cancelbtn {
+            background-color: #f44336;
+        }
+        .imgcontainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+        }
+        img.avatar {
+            width: 30%;
+            border-radius: 50%;
+        }
+        .container > form > .form-group > label {
+            font-weight: bold;
+        }
+        .container > form > .form-group > input[type=text]:focus, .container > form > .form-group > input[type=password]:focus {
+            background-color: #f9f9f9;
+        }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+        .signupbtn {
+            float: right;
+        }
+        /* 추가 디자인 */
+        .google-btn {
+            background-color: #DB4437;
+            color: white;
+        }
+        .link {
+            text-align: center;
+        }
+        .link a {
+            color: #333;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Login</h1>
+    <form>
+        <div class="form-group">
+            <label for="username"><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="password" required>
+        </div>
+        <div class="clearfix">
+            <button type="submit" class="signupbtn">Login</button>
+        </div>
+    </form>
+    <!-- 추가 버튼 -->
+    <div class="clearfix">
+        <button class="google-btn" onclick="loginWithGoogle()">Login with Google</button>
+    </div>
+    <!-- 비밀번호 찾기 -->
+    <div class="link">
+        <a href="/member/add">회원가입</a></br>
+        <a href="#">비밀번호 찾기</a>
+    </div>
+</div>
+
+<script>
+    function loginWithGoogle() {
+        window.location.href = "/oauth2/authorization/google";
+    }
+</script>
+
+</body>
+</html>
