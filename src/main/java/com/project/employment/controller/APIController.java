@@ -18,7 +18,7 @@ public class APIController {
     private final SchoolSearchAPI schoolSearchAPI;
 
     @GetMapping("/school-search")
-    public ResponseEntity<List<SchoolSearchDto>> getSchoolInfo(String schoolName) {
-        return schoolSearchAPI.searchSchool(schoolName);
+    public ResponseEntity<List<SchoolSearchDto>> getSchoolInfo(String schoolName, String schoolType) {
+        return schoolSearchAPI.searchSchool(schoolName, schoolType);
     }
 }

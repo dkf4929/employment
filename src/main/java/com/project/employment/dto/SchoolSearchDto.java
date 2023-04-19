@@ -9,7 +9,7 @@ import lombok.Data;
 @Builder
 public class SchoolSearchDto {
     private String name;
-    private String telNo;
+    private String campusGubun;
     private String address;
     private String gubun;
 }
