@@ -1,7 +1,11 @@
 package com.project.employment.api;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.project.employment.dto.SchoolSearchDto;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.parser.JSONParser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -24,36 +28,44 @@ import java.util.List;
 @Slf4j
 @Component
 public class SchoolSearchAPI {
-    private static final String BASE_URL = "https://open.neis.go.kr/hub/schoolInfo";
-
     @Value("${school.api-key}")
-    private String SERVICE_KEY;
+    private String apiKey;
 
-    public ResponseEntity<List<SchoolSearchDto>> searchSchool(String schoolName) {
+    private static final String BASE_URL = "https://www.career.go.kr/cnet/openapi/getOpenApi";
+
+    public ResponseEntity<List<SchoolSearchDto>> searchSchool(String schoolName, String schoolType) {
         List<SchoolSearchDto> list = new ArrayList<>();
         CloseableHttpClient httpclient = HttpClients.createDefault();
 
         try {
-            String encodedSchoolName = URLEncoder.encode(schoolName, StandardCharsets.UTF_8);
-            String url = BASE_URL + "?KEY=" + SERVICE_KEY + "&SCHUL_NM=" + encodedSchoolName;
+//            String encodedSchoolName = URLEncoder.encode(schoolName, StandardCharsets.UTF_8);
+            String url = BASE_URL + "?apiKey=" + apiKey + "&svcType=api&svcCode=SCHOOL&contentType=json&gubun=" + schoolType + "&searchSchulNm=" + schoolName;
 
             HttpGet httpGet = new HttpGet(url);
             HttpResponse response = httpclient.execute(httpGet);
             HttpEntity entity = response.getEntity();
 
             if (entity != null) {
-                JSONObject jsonObject = xmlToJson(EntityUtils.toString(entity, StandardCharsets.UTF_8));// xml to json
-                JSONArray jsonArray = jsonObject.getJSONObject("schoolInfo").getJSONArray("row");
+                JsonParser parser = new JsonParser();
+                JsonObject jsonObj = parser.parse(EntityUtils.toString(entity, StandardCharsets.UTF_8)).getAsJsonObject();
+                JsonArray jsonArray = jsonObj.getAsJsonObject("dataSearch").getAsJsonArray("content");
 
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject content = jsonArray.getJSONObject(i);
-
-                    list.add(SchoolSearchDto.builder()
-                            .name(content.getString("SCHUL_NM"))
-                            .address(content.getString("ORG_RDNMA"))
-                            .gubun(content.getString("HS_SC_NM"))
-                            .telNo(content.getString("ORG_TELNO"))
-                            .build());
+                if (jsonArray.size() > 0) {
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        if (schoolType.equals("univ_list")) {
+                            list.add(SchoolSearchDto.builder()
+                                    .name(jsonArray.get(i).getAsJsonObject().get("schoolName").getAsString())
+                                    .address(jsonArray.get(i).getAsJsonObject().get("adres").getAsString())
+                                    .gubun(jsonArray.get(i).getAsJsonObject().get("schoolGubun").getAsString())
+                                    .campusGubun(jsonArray.get(i).getAsJsonObject().get("campusName").getAsString())
+                                    .build());
+                        } else {
+                            list.add(SchoolSearchDto.builder()
+                                    .name(jsonArray.get(i).getAsJsonObject().get("schoolName").getAsString())
+                                    .address(jsonArray.get(i).getAsJsonObject().get("adres").getAsString())
+                                    .build());
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
@@ -69,7 +81,7 @@ public class SchoolSearchAPI {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    private JSONObject xmlToJson(String xml) {
-        return XML.toJSONObject(xml);
-    }
+//    private JSONObject xmlToJson(String xml) {
+//        return XML.toJSONObject(xml);
+//    }
 }
