@@ -20,7 +20,7 @@
         h1 {
             text-align: center;
         }
-        input[type=text], input[type=password], input[type=date], input[type=email], input[type=file] {
+        input {
             width: 100%;
             padding: 14px 20px;
             margin: 8px 0;
@@ -120,9 +120,9 @@
 <body>
 <div class="container">
     <h1>Signup</h1>
-    <form>
+    <form method="post" action="/member/add" id="myForm">
         <div class="form-group">
-            <label for="username"><b>Username</b></label>
+            <label for="아이디"><b>아이디</b></label>
             <div class="username-field">
                 <input type="text" name="loginId" id="loginId" required>
                 <button type="button" id="check_duplicate" class="check-username-btn" onclick="checkDuplicate()">중복 체크</button>
@@ -130,20 +130,20 @@
             <div class="username-check-message"></div>
         </div>
         <div class="form-group">
-            <label for="password"><b>Password</b></label>
+            <label for="패스워드"><b>패스워드</b></label>
             <input type="password" name="password" required>
         </div>
         <div class="form-group">
-            <label for="confirm_password"><b>Confirm Password</b></label>
-            <input type="password" name="confirm_password" id="confirm_password" required>
+            <label for="패스워드 재입력"><b>패스워드 재입력</b></label>
+            <input type="password" name="confirmPassword" id="confirmPassword" required>
         </div>
         <div class="form-group">
-            <label for="member_name"><b>성명</b></label>
-            <input type="text" name="member_name" id="member_name" required>
+            <label for="memberName"><b>성명</b></label>
+            <input type="text" name="memberName" id="memberName" required>
         </div>
         <div class="form-group">
-            <label for="photo_file"><b>사진</b></label>
-            <input type="file" name="photo_file" id="photo_file" required>
+            <label for="photoFile"><b>사진</b></label>
+            <input type="file" name="photoFile" id="photoFile">
         </div>
         <div class="form-group">
             <label for="birthday"><b>생년월일</b></label>
@@ -154,16 +154,20 @@
             <input type="email" name="email" id="email" required>
         </div>
         <div class="form-group">
-            <label for="school_name"><b>학교</b></label>
+            <label for="email"><b>핸드폰 번호</b></label>
+            <input type="text" name="phoneNumber"  id="phoneNumber" required>
+        </div>
+        <div class="form-group">
+            <label for="schoolName"><b>최종학력</b></label>
             <div style="display: flex">
-                <input type="text" name="school_name" id="school_name" required>
-                <button class="search-button" id="school_search">
+                <input type="text" name="schoolName" id="schoolName" readonly required>
+                <button class="search-button" id="school_search" onclick="schoolSearch()" type="button">
                     <img src="/image/search_icon.png" alt="Search">
                 </button>
             </div>
         </div>
         <div class="clearfix">
-            <button type="submit" id="signup" class="signupbtn" onclick="signUp()">Signup</button>
+            <button type="submit" id="signup" class="signupbtn">Signup</button>
         </div>
     </form>
 </div>
@@ -176,27 +180,39 @@
         count = 1;
     });
 
-    const popupBtn = document.getElementById("school_search");
-
-    // 버튼 클릭 이벤트 핸들러 등록
-    popupBtn.addEventListener("click", () => {
-        const schoolName = document.getElementById('school_name').value;
-
-        if (schoolName.length < 2) {
-            alert('학교명은 두글자 이상 입력해주세요.');
-            return;
-        }
-
+    function schoolSearch() {
         const w = 500;
         const h = 500;
         const left = screen.width / 2 - w / 2;
         const top = screen.height / 2 - h / 2;
 
-        const popupWindow = window.open("./school-search?schoolName=" + document.getElementById('school_name').value, "_blank", "width=${w}, height=${h}, top=${top}, left=${left}");
-    });
+        window.open("./school-search", "_blank", "width=${w}, height=${h}, top=${top}, left=${left}");
+    }
 
     function loginWithGoogle() {
         window.location.href = "/oauth2/authorization/google";
+    }
+
+    const inputField = document.querySelector("#phoneNumber");
+
+    inputField.addEventListener("input", () => {
+        const value = inputField.value;
+        const newValue = value.replace(/[^0-9]/g, ""); // 숫자 이외의 문자를 제거
+        inputField.value = newValue;
+    });
+
+    function sendSelectedData(data) {
+        // 선택된 데이터를 출력
+        console.log(data);
+
+        // 받아온 데이터를 사용하여 add.html의 DOM을 조작
+        document.getElementById('schoolName').value = data.schoolName;
+        document.getElementById('address').value = data.address;
+        document.getElementById('phoneNumber').value = data.phoneNumber;
+    }
+
+    function getSchoolName(data) {
+        document.getElementById('schoolName').value = data;
     }
 
     function checkDuplicate() {
@@ -214,6 +230,7 @@
         })
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 if (data > 0) {
                     document.getElementById('loginId').value = '';
                     alert('중복된 ID 입니다. 다른 ID를 입력하세요.');
@@ -228,26 +245,16 @@
             });
     }
 
-    function signUp() {
-        if (count == 0) {
-            fetch("/member/add", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({loginId : document.getElementById('loginId').value})
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        } else {
-            alert('중복 체크 후 진행해주세요.');
+    const myForm = document.getElementById("myForm");
+    const submitBtn = document.getElementById("signup");
+
+    submitBtn.addEventListener("click", (event) => {
+        if (count != 0) {
+            event.preventDefault(); // 폼 제출 취소
+            alert('중복 체크 후 회원가입이 가능합니다.');
+            return;
         }
-    }
+    });
 </script>
 </body>
 </html>

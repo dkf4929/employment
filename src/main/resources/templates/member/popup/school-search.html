@@ -47,6 +47,17 @@
             margin-right: 10px; /* 수정된 부분 */
         }
 
+        .input-wrap select {
+            height: 32px;
+            font-size: 16px;
+            padding: 6px;
+            box-sizing: border-box;
+            display: block;
+            margin-right: 10px;
+            width: 120px;
+            margin-bottom: 20px;
+        }
+
         body {
             font-family: Arial, sans-serif;
         }
@@ -101,18 +112,28 @@
 <body>
 <h1>학교 검색</h1>
 <div class="input-wrap">
-    <label for="schoolName">학교명:</label>
+    <label for="schoolType">학교 구분 : </label>
+    <select id="schoolType" name="schoolType">
+        <option value="elem_list">초등학교</option>
+        <option value="midd_list">중학교</option>
+        <option value="high_list">고등학교</option>
+        <option value="univ_list">대학교</option>
+        <option value="seet_list">특수학교</option>
+    </select>
+    <label for="schoolName">학교명 : </label>
     <input type="text" id="schoolName" name="schoolName">
+    <div style="margin-left: auto; margin-bottom: 20px;">
     <button type="button" id="searchButton">조회</button>
-    <button type="button" id="confirmButton">확인</button>
+    <button type="button" id="confirmButton" onclick="confirm()">확인</button>
+    </div>
 </div>
 <table>
     <thead>
     <tr>
         <th>학교명</th>
         <th>구분</th>
+        <th>본/분교</th>
         <th>학교위치</th>
-        <th>전화번호</th>
     </tr>
     </thead>
     <tbody id="schoolList">
@@ -122,16 +143,6 @@
 <script>
     const searchButton = document.querySelector("#searchButton");
     const schoolNameInput = document.querySelector("#schoolName");
-    const schoolList = document.querySelector("#schoolList");
-
-    //queryparamter 가져와서 파라미터에 set
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    document.getElementById('schoolName').value = urlParams.get('schoolName');
-
-    window.onload = function() {
-        searchSchool(urlParams.get('schoolName'));
-    }
 
     searchButton.addEventListener("click", () => {
         if (document.getElementById('schoolName').value.length < 2) {
@@ -142,8 +153,21 @@
         searchSchool(document.getElementById('schoolName').value);
     });
 
+
+    function confirm() {
+        var table = document.getElementById("schoolList");
+
+        if (table.getElementsByClassName('selected')[0] == undefined) {
+            alert("선택된 행이 없습니다.");
+            return;
+        }
+
+        window.opener.getSchoolName(table.getElementsByClassName('selected')[0].getElementsByTagName('td')[0].innerHTML);
+        window.close();
+    }
+
     function searchSchool(schoolName) {
-        fetch("/api/school-search?schoolName=" + schoolName, {
+        fetch("/api/school-search?schoolName=" + schoolName + "&schoolType=" + document.getElementById('schoolType').value, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -155,8 +179,13 @@
                 let tableHTML = '';
 
                 data.forEach(school => {
-                    tableHTML += `<tr><td>${school.name}</td><td>${school.gubun}</td><td>${school.address}</td><td>${school.telNo}</td></tr>`;
+                    tableHTML += `<tr><td>${school.name}</td><td>${school.gubun}</td><td>${school.campusGubun}</td><td>${school.address}</td></tr>`;
                 });
+
+                if (data.length < 1) {
+                    alert('조회된 데이터가 없습니다.');
+                    return;
+                }
 
                 // HTML 테이블에 결과 추가
                 schoolList.innerHTML = tableHTML;
