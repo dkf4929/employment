@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,14 +28,26 @@ public class Member implements UserDetails {
 
     private String email;
 
+    private String memberName;
+
+    private LocalDate birthday;
+
+    private String phoneNumber;
+
+    private String schoolName;
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
     @Builder
-    public Member(String loginId, String password, String email, String ... role) {
+    public Member(String loginId, String password, String email, String memberName, LocalDate birthday, String phoneNumber, String schoolName, String ... role) {
         this.loginId = loginId;
         this.password = password;
         this.email = email;
+        this.memberName = memberName;
+        this.birthday = birthday;
+        this.phoneNumber = phoneNumber;
+        this.schoolName = schoolName;
 
         for (String s : role) {
             roles.add(s);
