@@ -1,6 +1,8 @@
 package com.project.employment.controller;
 
+import com.project.employment.dto.MemberSaveDto;
 import com.project.employment.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,9 @@ public class MemberController {
         return "member/popup/school-search";
     }
 
-//    @PostMapping("/add")
-//    public void save()
+    @PostMapping("/add")
+    public void save(@Valid MemberSaveDto dto) {
+        System.out.println("dto = " + dto);
+        memberService.save(dto);
+    }
 }
