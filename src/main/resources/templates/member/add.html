@@ -160,7 +160,7 @@
         <div class="form-group">
             <label for="schoolName"><b>최종학력</b></label>
             <div style="display: flex">
-                <input type="text" name="schoolName" id="schoolName" readonly required>
+                <input type="text" name="schoolName" id="schoolName" required>
                 <button class="search-button" id="school_search" onclick="schoolSearch()" type="button">
                     <img src="/image/search_icon.png" alt="Search">
                 </button>
@@ -173,6 +173,7 @@
 </div>
 <script>
     var count = 1;
+    var sCount = 0; // 학교 검색 했는지 여부
 
     const loginId = document.getElementById('loginId');
 
@@ -186,7 +187,7 @@
         const left = screen.width / 2 - w / 2;
         const top = screen.height / 2 - h / 2;
 
-        window.open("./school-search", "_blank", "width=${w}, height=${h}, top=${top}, left=${left}");
+        window.open("./school-search?schoolName=" + document.getElementById('schoolName').value, "_blank", "width=${w}, height=${h}, top=${top}, left=${left}");
     }
 
     function loginWithGoogle() {
@@ -201,18 +202,10 @@
         inputField.value = newValue;
     });
 
-    function sendSelectedData(data) {
-        // 선택된 데이터를 출력
-        console.log(data);
-
-        // 받아온 데이터를 사용하여 add.html의 DOM을 조작
-        document.getElementById('schoolName').value = data.schoolName;
-        document.getElementById('address').value = data.address;
-        document.getElementById('phoneNumber').value = data.phoneNumber;
-    }
-
     function getSchoolName(data) {
         document.getElementById('schoolName').value = data;
+        document.getElementById('schoolName').readOnly = true
+        sCount ++;
     }
 
     function checkDuplicate() {
@@ -253,7 +246,29 @@
             event.preventDefault(); // 폼 제출 취소
             alert('중복 체크 후 회원가입이 가능합니다.');
             return;
+        } else if (sCount == 0) {
+            event.preventDefault(); // 폼 제출 취소
+            alert('학교를 검색해주세요.');
+            return;
         }
+    });
+
+    myForm.addEventListener('submit', event => {
+        event.preventDefault();
+
+        const formData = new FormData(myForm);
+
+        fetch('/member/add', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (!response.ok) {
+                return response.text().then(error => { throw new Error(error); });
+            }
+        }).then(data => {
+        }).catch(error => {
+            alert(error.message); // 서버에서 발생한 예외 메시지를 알림 창에 표시
+        });
     });
 </script>
 </body>
