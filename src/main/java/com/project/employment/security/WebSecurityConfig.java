@@ -25,7 +25,7 @@ import java.io.IOException;
 
 @Configuration
 @RequiredArgsConstructor
-//@EnableWebSecurity
+@EnableWebSecurity
 @Slf4j
 public class WebSecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
@@ -42,36 +42,36 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
-//        http.httpBasic().disable()
-//                .authorizeHttpRequests()
-//                .requestMatchers(whiteList).permitAll()
-//                .requestMatchers(userPath).hasRole("ROLE_USER")
-//                .anyRequest().authenticated()
+        http.httpBasic().disable()
+                .authorizeHttpRequests()
+                .requestMatchers(whiteList).permitAll()
+                .requestMatchers(userPath).hasRole("ROLE_USER")
+                .anyRequest().authenticated()
+                .and()
+                    .logout()
+                    .logoutSuccessUrl("/")
+                .and()
+                .exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
+                    @Override
+                    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+                        System.out.println("URI --> " + request.getRequestURI());
+                    }
+                })
+                .authenticationEntryPoint(new AuthenticationEntryPoint() {
+                    @Override
+                    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+                        System.out.println("URI --> " + request.getRequestURI());
+                    }
+                })
+                .and()
+//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService);
 //                .and()
-//                    .logout()
-//                    .logoutSuccessUrl("/")
-//                .and()
-//                .exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
-//                    @Override
-//                    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-//                        System.out.println("URI --> " + request.getRequestURI());
-//                    }
-//                })
-//                .authenticationEntryPoint(new AuthenticationEntryPoint() {
-//                    @Override
-//                    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-//                        System.out.println("URI --> " + request.getRequestURI());
-//                    }
-//                })
-//                .and()
-////                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-//                .oauth2Login()
-//                .userInfoEndpoint()
-//                .userService(customOAuth2UserService);
-////                .and()
-////                .successHandler(googleLoginSuccessHandler);
-//
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//                .successHandler(googleLoginSuccessHandler);
+
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
 
