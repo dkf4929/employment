@@ -142,7 +142,9 @@
 </table>
 <script>
     const searchButton = document.querySelector("#searchButton");
-    const schoolNameInput = document.querySelector("#schoolName");
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    document.getElementById('schoolName').value = urlParams.get('schoolName');
 
     searchButton.addEventListener("click", () => {
         if (document.getElementById('schoolName').value.length < 2) {

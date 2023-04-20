@@ -1,5 +1,6 @@
 package com.project.employment.repository;
 
+import com.project.employment.dto.LoginDto;
 import com.project.employment.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
