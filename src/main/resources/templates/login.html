@@ -84,17 +84,17 @@
 <body>
 <div class="container">
     <h1>Login</h1>
-    <form>
+    <form id="myForm">
         <div class="form-group">
-            <label for="username"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="username" required>
+            <label for="loginId"><b>Username</b></label>
+            <input type="text" placeholder="Enter ID" name="loginId" required>
         </div>
         <div class="form-group">
             <label for="password"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="password" required>
         </div>
         <div class="clearfix">
-            <button type="submit" class="signupbtn">Login</button>
+            <button type="submit" id="submit" class="signupbtn">Login</button>
         </div>
     </form>
     <!-- 추가 버튼 -->
@@ -112,6 +112,25 @@
     function loginWithGoogle() {
         window.location.href = "/oauth2/authorization/google";
     }
+
+    myForm.addEventListener('submit', event => {
+        event.preventDefault();
+
+        const formData = new FormData(myForm);
+
+        fetch('/login', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            console.log(response)
+            if (!response.ok) {
+                return response.text().then(error => { throw new Error(error); });
+            }
+        }).then(data => {
+        }).catch(error => {
+            alert(error.message); // 서버에서 발생한 예외 메시지를 알림 창에 표시
+        });
+    });
 </script>
 
 </body>
