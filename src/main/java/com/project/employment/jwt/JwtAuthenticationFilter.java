@@ -18,7 +18,7 @@ import java.util.Arrays;
 @Slf4j
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
-    private String[] whiteList = new String[]{"/api/login", "/static/js/**", "/static/css/**", "/index.html", "/api/signup"};
+    private String[] whiteList = new String[]{"/login", "/static/js/**", "/static/css/**", "/index.html", "/api/signup"};
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
