@@ -36,7 +36,6 @@ public class MemberController {
 
     @PostMapping("/add")
     public void save(@Valid MemberSaveDto dto) {
-        System.out.println("dto = " + dto);
         memberService.save(dto);
     }
 }

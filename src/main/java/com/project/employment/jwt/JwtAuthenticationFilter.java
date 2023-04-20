@@ -22,7 +22,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        System.out.println("deploy test!!!!!!!!!!!!!221124214");
         String URI = ((HttpServletRequest) request).getRequestURI();
 
         if (!Arrays.stream(whiteList).anyMatch(a -> URI.contains(a)) && !URI.equals("/")) {
@@ -31,8 +30,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                System.out.println("authentication = " + authentication);
 
                 SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                         .forEach((s) -> log.info("authority", s.getAuthority()));
