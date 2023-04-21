@@ -1,6 +1,6 @@
 package com.project.employment.exception;
 
-public class NoSuchUserException extends RuntimeException {
+public class NoSuchUserException extends CommonException {
     public NoSuchUserException() {
         super();
     }
