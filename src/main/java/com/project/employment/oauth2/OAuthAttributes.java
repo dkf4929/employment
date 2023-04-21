@@ -3,9 +3,12 @@ package com.project.employment.oauth2;
 import com.project.employment.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
+
 import java.util.Map;
 
 @Getter
+@ToString
 public class OAuthAttributes {
     private Map<String, Object> attributes;
     private String nameAttributeKey;
@@ -38,8 +41,9 @@ public class OAuthAttributes {
 
     public Member toEntity(){
         return Member.builder()
-                .loginId(name)
+                .memberName(name)
                 .email(email)
+                .editYn("N")
                 .role(new String[]{"ROLE_USER"})
                 .build();
     }
