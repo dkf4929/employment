@@ -1,6 +1,6 @@
 package com.project.employment.exception;
 
-public class TokenExpireException extends RuntimeException{
+public class TokenExpireException extends CommonException {
     public TokenExpireException() {
         super();
     }

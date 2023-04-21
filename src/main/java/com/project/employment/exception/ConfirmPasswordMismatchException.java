@@ -1,6 +1,6 @@
 package com.project.employment.exception;
 
-public class ConfirmPasswordMismatchException extends RuntimeException {
+public class ConfirmPasswordMismatchException extends CommonException {
     public ConfirmPasswordMismatchException() {
         super();
     }

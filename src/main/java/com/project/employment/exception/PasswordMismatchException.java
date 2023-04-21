@@ -1,6 +1,6 @@
 package com.project.employment.exception;
 
-public class PasswordMismatchException extends RuntimeException {
+public class PasswordMismatchException extends CommonException {
     public PasswordMismatchException() {
         super();
     }
