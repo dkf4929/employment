@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Entity
 @NoArgsConstructor
 @Getter
+@ToString
 public class Member implements UserDetails {
     @Id
     @GeneratedValue
@@ -36,11 +38,20 @@ public class Member implements UserDetails {
 
     private String schoolName;
 
+    private String editYn; // 구글 로그인 시 프로필에 정보를 입력했는지 여부.
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
+    public Member update(String email, String name) {
+        this.email = email;
+        this.memberName = name;
+
+        return this;
+    }
+
     @Builder
-    public Member(String loginId, String password, String email, String memberName, LocalDate birthday, String phoneNumber, String schoolName, String ... role) {
+    public Member(String loginId, String password, String email, String memberName, LocalDate birthday, String phoneNumber, String schoolName, String editYn, String ... role) {
         this.loginId = loginId;
         this.password = password;
         this.email = email;
@@ -48,6 +59,7 @@ public class Member implements UserDetails {
         this.birthday = birthday;
         this.phoneNumber = phoneNumber;
         this.schoolName = schoolName;
+        this.editYn = editYn;
 
         for (String s : role) {
             roles.add(s);
