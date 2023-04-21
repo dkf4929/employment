@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup Page</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #F7F7F7;
+        }
+        .container {
+            background-color: #FFFFFF;
+            border: 1px solid #DDDDDD;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px #DDDDDD;
+            width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 14px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button[id=signup], button[id=check_duplicate] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .cancelbtn {
+            background-color: #f44336;
+        }
+        .imgcontainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+        }
+        img.avatar {
+            width: 30%;
+            border-radius: 50%;
+        }
+        .container > form > .form-group > label {
+            font-weight: bold;
+        }
+        .container > form > .form-group > input[type=text]:focus, .container > form > .form-group > input[type=password]:focus {
+            background-color: #f9f9f9;
+        }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+        .signupbtn {
+            float: right;
+        }
+        /* 추가 디자인 */
+        .google-btn {
+            background-color: #DB4437;
+            color: white;
+        }
+        .link {
+            text-align: center;
+        }
+        .link a {
+            color: #333;
+            text-decoration: none;
+        }
+        .username-field {
+            display: flex;
+            align-items: center;
+        }
+
+        .username-field input[type="text"] {
+            flex-grow: 2;
+        }
+
+        .username-field button.check-username-btn {
+            margin-left: 10px;
+            width: 35%;
+        }
+
+        .username-check-message {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .search-button {
+            border: black;
+            cursor: pointer;
+            display: inline-block;
+            width: 70px;
+            height: 45px;
+            margin-left: 5px;
+            margin-top: 8px;
+            vertical-align: top;
+        }
+
+        .search-button img {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Signup</h1>
+    <form method="post" action="/member/add" id="myForm">
+        <div class="form-group">
+            <label for="memberName"><b>성명</b></label>
+            <input type="text" name="memberName" id="memberName" required th:value="${memberName}">
+        </div>
+        <div class="form-group">
+            <label for="photoFile"><b>사진</b></label>
+            <input type="file" name="photoFile" id="photoFile">
+        </div>
+        <div class="form-group">
+            <label for="birthday"><b>생년월일</b></label>
+            <input type="date" name="birthday" id="birthday" required>
+        </div>
+        <div class="form-group">
+            <label for="email"><b>이메일</b></label>
+            <input type="email" name="email" id="email" required th:value="${email}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="email"><b>핸드폰 번호</b></label>
+            <input type="text" name="phoneNumber"  id="phoneNumber" required>
+        </div>
+        <div class="form-group">
+            <label for="schoolName"><b>최종학력</b></label>
+            <div style="display: flex">
+                <input type="text" name="schoolName" id="schoolName" required>
+                <button class="search-button" id="school_search" onclick="schoolSearch()" type="button">
+                    <img src="/image/search_icon.png" alt="Search">
+                </button>
+            </div>
+        </div>
+        <div class="clearfix">
+            <button type="submit" id="signup" class="signupbtn">Signup</button>
+        </div>
+    </form>
+</div>
+<script>
+    var count = 1;
+    var sCount = 0; // 학교 검색 했는지 여부
+
+    const loginId = document.getElementById('loginId');
+
+    loginId.addEventListener('change', function() {
+        count = 1;
+    });
+
+    function schoolSearch() {
+        const w = 500;
+        const h = 500;
+        const left = screen.width / 2 - w / 2;
+        const top = screen.height / 2 - h / 2;
+
+        window.open("./school-search?schoolName=" + document.getElementById('schoolName').value, "_blank", "width=${w}, height=${h}, top=${top}, left=${left}");
+    }
+
+    function loginWithGoogle() {
+        window.location.href = "/oauth2/authorization/google";
+    }
+
+    const inputField = document.querySelector("#phoneNumber");
+
+    inputField.addEventListener("input", () => {
+        const value = inputField.value;
+        const newValue = value.replace(/[^0-9]/g, ""); // 숫자 이외의 문자를 제거
+        inputField.value = newValue;
+    });
+
+    function getSchoolName(data) {
+        document.getElementById('schoolName').value = data;
+        document.getElementById('schoolName').readOnly = true
+        sCount ++;
+    }
+
+    function checkDuplicate() {
+        if (document.getElementById('loginId').value.length < 5) {
+            document.getElementById('loginId').value = '';
+            alert('ID는 5글자 이상이어야 합니다.');
+            return;
+        }
+
+        fetch("/member/id_check?loginId=" + document.getElementById('loginId').value, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data > 0) {
+                    document.getElementById('loginId').value = '';
+                    alert('중복된 ID 입니다. 다른 ID를 입력하세요.');
+                    return;
+                } else {
+                    count = 0;
+                    alert('사용할 수 있는 ID 입니다.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    const myForm = document.getElementById("myForm");
+    const submitBtn = document.getElementById("signup");
+
+    submitBtn.addEventListener("click", (event) => {
+        if (count != 0) {
+            event.preventDefault(); // 폼 제출 취소
+            alert('중복 체크 후 회원가입이 가능합니다.');
+            return;
+        } else if (sCount == 0) {
+            event.preventDefault(); // 폼 제출 취소
+            alert('학교를 검색해주세요.');
+            return;
+        }
+    });
+
+    myForm.addEventListener('submit', event => {
+        event.preventDefault();
+
+        const formData = new FormData(myForm);
+
+        fetch('/member/add', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (!response.ok) {
+                return response.text().then(error => { throw new Error(error); });
+            }
+        }).then(data => {
+        }).catch(error => {
+            alert(error.message); // 서버에서 발생한 예외 메시지를 알림 창에 표시
+        });
+    });
+</script>
+</body>
+</html>
