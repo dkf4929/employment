@@ -1,5 +1,6 @@
 package com.project.employment.security;
 
+import com.project.employment.handler.GoogleLoginSuccessHandler;
 import com.project.employment.jwt.JwtAuthenticationFilter;
 import com.project.employment.jwt.JwtTokenProvider;
 import com.project.employment.oauth2.CustomOAuth2UserService;
@@ -29,9 +30,9 @@ import java.io.IOException;
 @Slf4j
 public class WebSecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
-//    private final GoogleLoginSuccessHandler googleLoginSuccessHandler;
+    private final GoogleLoginSuccessHandler googleLoginSuccessHandler;
     private String[] userPath = new String[]{};
-    private String[] whiteList = new String[]{"/member/**", "/resources/**", "/"};
+    private String[] whiteList = new String[]{"/member/add", "/resources/**", "/", "/api/**", "/image/**", "/login"};
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
@@ -54,7 +55,7 @@ public class WebSecurityConfig {
                 .exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
                     @Override
                     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-                        System.out.println("URI --> " + request.getRequestURI());
+                        log.error("access Denied!", request.getRequestURI());
                     }
                 })
                 .authenticationEntryPoint(new AuthenticationEntryPoint() {
@@ -64,12 +65,12 @@ public class WebSecurityConfig {
                     }
                 })
                 .and()
-//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login()
                 .userInfoEndpoint()
-                .userService(customOAuth2UserService);
-//                .and()
-//                .successHandler(googleLoginSuccessHandler);
+                .userService(customOAuth2UserService)
+                .and()
+                .successHandler(googleLoginSuccessHandler);
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
