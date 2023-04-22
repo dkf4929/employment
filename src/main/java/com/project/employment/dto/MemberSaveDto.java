@@ -56,6 +56,8 @@ public class MemberSaveDto {
                 .email(this.email)
                 .loginId(this.loginId)
                 .schoolName(this.schoolName)
+                .socialLoginYn("N")
                 .build();
     }
+
 }
