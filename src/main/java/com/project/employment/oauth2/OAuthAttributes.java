@@ -45,6 +45,7 @@ public class OAuthAttributes {
                 .email(email)
                 .editYn("N")
                 .role(new String[]{"ROLE_USER"})
+                .socialLoginYn("Y")
                 .build();
     }
 }

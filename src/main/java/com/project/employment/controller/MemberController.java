@@ -1,6 +1,7 @@
 package com.project.employment.controller;
 
 import com.project.employment.dto.MemberSaveDto;
+import com.project.employment.dto.MemberUpdateDto;
 import com.project.employment.entity.Member;
 import com.project.employment.service.MemberService;
 import jakarta.validation.Valid;
@@ -14,10 +15,8 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -53,5 +52,19 @@ public class MemberController {
         model.addAttribute("memberName", loginMember.getMemberName());
 
         return "member/edit";
+    }
+
+    @PatchMapping("/edit")
+    @ResponseBody
+    public String edit(@Valid MemberUpdateDto dto, BindingResult bindingResult) {
+        System.out.println("dto = " + dto);
+
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
+            System.out.println("fieldError = " + fieldError.getField());
+        }
+
+        memberService.edit(dto, bindingResult);
+
+        return "저장이 완료되었습니다.";
     }
 }
