@@ -30,6 +30,8 @@ public class GoogleLoginSuccessHandler implements AuthenticationSuccessHandler {
         // 최초 구글 로그인 시 리다이렉트
         if (loginMember.getEditYn().equals("N")) {
             response.sendRedirect("/member/edit");
+        } else {
+            response.sendRedirect("/home");
         }
     }
 }

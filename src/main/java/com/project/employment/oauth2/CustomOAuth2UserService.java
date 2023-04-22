@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -46,6 +47,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // user 테이블에 구글 메일 계정 존재 -> 토큰 발급
         // user 테이블에 구글 메일 계정 존재하지 않을 경우 user테이블에 저장 후 토큰 발급
         Member member = saveOrUpdate(attributes);
+        System.out.println("member = " + member);
         Cookie cookie = new Cookie("jwtToken", tokenProvider.createToken(attributes.getEmail(), List.of("ROLE_USER")));
         cookie.setMaxAge(30 * 60 * 1000);
         cookie.setPath("/");
@@ -58,9 +60,12 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private Member saveOrUpdate(OAuthAttributes attributes){
-        Member member = memberRepository.findByEmail(attributes.getEmail()).map(entity->entity.update(attributes.getName(), attributes.getEmail()))
-                .orElse(attributes.toEntity());
+        Optional<Member> member = memberRepository.findByEmail(attributes.getEmail());
 
-        return memberRepository.save(member);
+        if (member.isEmpty()) {
+            return memberRepository.save(attributes.toEntity());
+        }
+
+        return member.get();
     }
 }
