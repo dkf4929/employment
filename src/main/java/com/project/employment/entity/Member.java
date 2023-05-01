@@ -1,11 +1,15 @@
 package com.project.employment.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +40,9 @@ public class Member implements UserDetails {
 
     private String schoolName;
 
+    @Lob
+    private byte[] file;
+
     private String editYn; // 구글 로그인 시 프로필에 정보를 입력했는지 여부.
 
     private String socialLoginYn;
@@ -45,7 +52,7 @@ public class Member implements UserDetails {
 
 
     @Builder
-    public Member(String loginId, String password, String email, String memberName, LocalDate birthday, String phoneNumber, String schoolName, String editYn, String socialLoginYn, String ... role) {
+    public Member(String loginId, String password, String email, String memberName, LocalDate birthday, String phoneNumber, String schoolName, String editYn, String socialLoginYn, byte[] file, String ... role) {
         this.loginId = loginId;
         this.password = password;
         this.email = email;
@@ -55,6 +62,7 @@ public class Member implements UserDetails {
         this.schoolName = schoolName;
         this.editYn = editYn;
         this.socialLoginYn = socialLoginYn;
+        this.file = file;
 
         for (String s : role) {
             roles.add(s);

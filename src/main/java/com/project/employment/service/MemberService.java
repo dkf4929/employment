@@ -14,6 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +42,20 @@ public class MemberService {
             throw new ConfirmPasswordMismatchException("비밀번호가 일치하지 않습니다.");
         }
 
-        memberRepository.save(dto.dtoToEntity());
+        try {
+            Member savedMember = memberRepository.save(dto.dtoToEntity());
+
+            if (!dto.getFile().isEmpty()) {
+                String fileName = dto.getFile().getOriginalFilename();
+
+                byte[] bytes = dto.getFile().getBytes();
+                Path path = Paths.get(savedMember.getId() + "/upload/" + fileName);
+                Files.createDirectories(path.getParent());
+                Files.write(path, bytes);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void edit(MemberUpdateDto dto, BindingResult bindingResult) {

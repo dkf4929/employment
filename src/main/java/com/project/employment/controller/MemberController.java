@@ -18,6 +18,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/member")
@@ -41,7 +43,7 @@ public class MemberController {
     }
 
     @PostMapping("/add")
-    public void save(@Valid MemberSaveDto dto, BindingResult bindingResult) {
+    public void save(@Valid MemberSaveDto dto, BindingResult bindingResult) throws IOException {
         memberService.save(dto, bindingResult);
     }
 
@@ -57,12 +59,6 @@ public class MemberController {
     @PatchMapping("/edit")
     @ResponseBody
     public String edit(@Valid MemberUpdateDto dto, BindingResult bindingResult) {
-        System.out.println("dto = " + dto);
-
-        for (FieldError fieldError : bindingResult.getFieldErrors()) {
-            System.out.println("fieldError = " + fieldError.getField());
-        }
-
         memberService.edit(dto, bindingResult);
 
         return "저장이 완료되었습니다.";
