@@ -1,5 +1,6 @@
 package com.project.employment.security;
 
+import com.project.employment.common.WhitePath;
 import com.project.employment.handler.GoogleLoginSuccessHandler;
 import com.project.employment.jwt.JwtAuthenticationFilter;
 import com.project.employment.jwt.JwtTokenProvider;
@@ -32,7 +33,6 @@ public class WebSecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final GoogleLoginSuccessHandler googleLoginSuccessHandler;
     private String[] userPath = new String[]{};
-    private String[] whiteList = new String[]{"/member/add", "/resources/**", "/", "/api/**", "/image/**", "/login"};
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
@@ -45,7 +45,7 @@ public class WebSecurityConfig {
         http.csrf().disable();
         http.httpBasic().disable()
                 .authorizeHttpRequests()
-                .requestMatchers(whiteList).permitAll()
+                .requestMatchers(WhitePath.WHITE_LIST).permitAll()
                 .requestMatchers(userPath).hasRole("ROLE_USER")
                 .anyRequest().authenticated()
                 .and()
