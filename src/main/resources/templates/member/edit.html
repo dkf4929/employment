@@ -127,7 +127,7 @@
         </div>
         <div class="form-group">
             <label for="photoFile"><b>사진</b></label>
-            <input type="file" name="photoFile" id="photoFile">
+            <input type="file" name="photoFile" id="photoFile" th:value="${file}">
         </div>
         <div class="form-group">
             <label for="birthday"><b>생년월일</b></label>
@@ -158,6 +158,8 @@
 <script>
     var count = 1;
     var sCount = 0; // 학교 검색 했는지 여부
+
+    console.log("file =" + "${file}");
 
 
     function schoolSearch() {
