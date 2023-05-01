@@ -5,7 +5,9 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 @Data
@@ -15,12 +17,14 @@ public class MemberSaveDto {
     private String loginId;
 
     @NotBlank
-    @Length(min = 8, max = 50)
+    @Length(min = 8, max = 50, message = "비밀번호는 8자리 이상 50자리 이하여야 합니다.")
     private String password;
 
     @NotBlank
-    @Length(min = 8, max = 50)
+    @Length(min = 8, max = 50, message = "비밀번호는 8자리 이상 50자리 이하여야 합니다.")
     private String confirmPassword;
+
+    private MultipartFile file;
 
     @NotBlank
     @Length(min = 2, max = 50)
@@ -41,7 +45,7 @@ public class MemberSaveDto {
     @NotBlank
     private String schoolName;
 
-    public Member dtoToEntity() {
+    public Member dtoToEntity() throws IOException {
         String date = this.birthday.replace("-", "");
 
         return Member.builder()
@@ -56,6 +60,7 @@ public class MemberSaveDto {
                 .email(this.email)
                 .loginId(this.loginId)
                 .schoolName(this.schoolName)
+                .file(this.file.getBytes())
                 .socialLoginYn("N")
                 .build();
     }
