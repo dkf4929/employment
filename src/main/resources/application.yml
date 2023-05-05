@@ -12,6 +12,8 @@ spring:
     show-sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
     generate-ddl: true
+    hibernate:
+      ddl-auto: none
   devtools:
     livereload:
       enabled: true
