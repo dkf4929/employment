@@ -19,6 +19,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Base64;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,11 +48,11 @@ public class MemberController {
         memberService.save(dto, bindingResult);
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/{memberId}")
     public String edit(Model model) {
         Member loginMember = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("email", loginMember.getEmail());
-        model.addAttribute("memberName", loginMember.getMemberName());
+        model.addAttribute("member", loginMember);
+        model.addAttribute("file", Base64.getEncoder().encodeToString(loginMember.getFile()));
 
         return "member/edit";
     }
