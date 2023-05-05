@@ -43,6 +43,8 @@ public class Member implements UserDetails {
     @Lob
     private byte[] file;
 
+    private String fileName;
+
     private String editYn; // 구글 로그인 시 프로필에 정보를 입력했는지 여부.
 
     private String socialLoginYn;
@@ -52,7 +54,7 @@ public class Member implements UserDetails {
 
 
     @Builder
-    public Member(String loginId, String password, String email, String memberName, LocalDate birthday, String phoneNumber, String schoolName, String editYn, String socialLoginYn, byte[] file, String ... role) {
+    public Member(String loginId, String password, String email, String memberName, LocalDate birthday, String phoneNumber, String schoolName, String editYn, String socialLoginYn, byte[] file, String fileName, String ... role) {
         this.loginId = loginId;
         this.password = password;
         this.email = email;
@@ -62,6 +64,7 @@ public class Member implements UserDetails {
         this.schoolName = schoolName;
         this.editYn = editYn;
         this.socialLoginYn = socialLoginYn;
+        this.fileName = fileName;
         this.file = file;
 
         for (String s : role) {
