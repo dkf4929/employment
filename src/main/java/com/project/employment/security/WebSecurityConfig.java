@@ -32,7 +32,7 @@ import java.io.IOException;
 public class WebSecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final GoogleLoginSuccessHandler googleLoginSuccessHandler;
-    private String[] userPath = new String[]{};
+    private String[] userPath = new String[]{"/member/edit"};
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
@@ -44,11 +44,10 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.httpBasic().disable()
-                .authorizeHttpRequests()
-                .requestMatchers(WhitePath.WHITE_LIST).permitAll()
-                .requestMatchers(userPath).hasRole("ROLE_USER")
-                .anyRequest().authenticated()
-                .and()
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers(WhitePath.WHITE_LIST).permitAll()
+                        .requestMatchers(userPath).hasRole("USER")
+                        .anyRequest().authenticated())
                     .logout()
                     .logoutSuccessUrl("/")
                 .and()
