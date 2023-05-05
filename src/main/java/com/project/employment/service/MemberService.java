@@ -29,6 +29,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final EntityManager entityManager;
 
+    // 아이디 중복체크
     public ResponseEntity<Integer> checkLoginIdDuplicate(String loginId) {
         return new ResponseEntity<>(memberRepository.countByLoginId(loginId), HttpStatus.OK);
     }
