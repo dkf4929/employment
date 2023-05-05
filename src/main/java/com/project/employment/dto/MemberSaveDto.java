@@ -61,6 +61,7 @@ public class MemberSaveDto {
                 .loginId(this.loginId)
                 .schoolName(this.schoolName)
                 .file(this.file.getBytes())
+                .fileName(this.file.getOriginalFilename())
                 .socialLoginYn("N")
                 .build();
     }

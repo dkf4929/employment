@@ -123,23 +123,24 @@
     <form method="post" action="/member/edit" id="myForm">
         <div class="form-group">
             <label for="memberName"><b>성명</b></label>
-            <input type="text" name="memberName" id="memberName" required th:value="${memberName}">
+            <input type="text" name="memberName" id="memberName" required th:value="${member.memberName}">
         </div>
         <div class="form-group">
             <label for="photoFile"><b>사진</b></label>
-            <input type="file" name="photoFile" id="photoFile" th:value="${file}">
+            <input type="file" name="file" id="file">
+            <img id="viewImage" style="width: 100%;">
         </div>
         <div class="form-group">
             <label for="birthday"><b>생년월일</b></label>
-            <input type="date" name="birthday" id="birthday" required>
+            <input type="date" name="birthday" id="birthday" required th:value="${member.birthday}">
         </div>
         <div class="form-group">
             <label for="email"><b>이메일</b></label>
-            <input type="email" name="email" id="email" required th:value="${email}" readonly>
+            <input type="email" name="email" id="email" required th:value="${member.email}" readonly>
         </div>
         <div class="form-group">
             <label for="email"><b>핸드폰 번호</b></label>
-            <input type="text" name="phoneNumber"  id="phoneNumber" required>
+            <input type="text" name="phoneNumber"  id="phoneNumber" required th:value="${member.phoneNumber}">
         </div>
         <div class="form-group">
             <label for="schoolName"><b>최종학력</b></label>
@@ -150,6 +151,7 @@
                 </button>
             </div>
         </div>
+        <img src="" alt="Search" id="photo">
         <div class="clearfix">
             <button type="submit" id="save" class="savebtn">save</button>
         </div>
@@ -159,9 +161,6 @@
     var count = 1;
     var sCount = 0; // 학교 검색 했는지 여부
 
-    console.log("file =" + "${file}");
-
-
     function schoolSearch() {
         const w = 500;
         const h = 500;
@@ -170,6 +169,54 @@
 
         window.open("./school-search?schoolName=" + document.getElementById('schoolName').value, "_blank", "width=${w}, height=${h}, top=${top}, left=${left}");
     }
+
+    window.onload = function() {
+        const base64ImageData = `[[${file}]]`;
+
+        if (base64ImageData) {
+            const binaryData = atob(base64ImageData);
+
+            const imageByteArray = new Uint8Array(binaryData.length);
+            for (let i = 0; i < binaryData.length; i++) {
+                imageByteArray[i] = binaryData.charCodeAt(i);
+            }
+
+            const arrayBuffer = imageByteArray.buffer;
+            const blob = new Blob([arrayBuffer], {type: 'image/jpeg'}); // 이미지 형식에 따라 'image/png' 또는 'image/gif' 등으로 변경 가능
+
+            const imageUrl = URL.createObjectURL(blob);
+
+            const img = document.getElementById('viewImage');
+            img.src = imageUrl;
+            img.alt = '이미지를 불러올 수 없습니다';
+            img.style.width = '100%';
+        }
+    };
+
+    document.getElementById('file').addEventListener('change', function(e) {
+        const fileInput = e.target;
+        const imagePreviewElement = document.getElementById('viewImage');
+
+        if (fileInput.files && fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+
+            if (file.type.match('image.*')) {
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    imagePreviewElement.src = event.target.result;
+                }
+
+                reader.readAsDataURL(file);
+            } else {
+                imagePreviewElement.src = '';
+                alert('이미지 파일을 선택해주세요.');
+            }
+        } else {
+            imagePreviewElement.src = '';
+        }
+    });
+
 
     const inputField = document.querySelector("#phoneNumber");
 
