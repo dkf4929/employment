@@ -25,6 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        // jwt 인증 필터를 거치지 않을 경로 설정.
         AntPathMatcher pathMatcher = new AntPathMatcher();
 
         return Arrays.stream(WhitePath.WHITE_LIST)

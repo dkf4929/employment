@@ -44,7 +44,7 @@ public class MemberService {
 
         try {
             Member savedMember = memberRepository.save(dto.dtoToEntity());
-
+            // 파일 저장
             if (!dto.getFile().isEmpty()) {
                 String fileName = dto.getFile().getOriginalFilename();
 
