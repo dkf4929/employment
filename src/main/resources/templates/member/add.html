@@ -290,6 +290,8 @@
             if (!response.ok) {
                 return response.text().then(error => { throw new Error(error); });
             }
+            alert("회원가입이 완료되었습니다.");
+            location.href = "/";
         }).then(data => {
         }).catch(error => {
             alert(error.message); // 서버에서 발생한 예외 메시지를 알림 창에 표시
