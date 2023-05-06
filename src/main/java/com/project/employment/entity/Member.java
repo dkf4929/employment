@@ -26,6 +26,7 @@ public class Member implements UserDetails {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String loginId;
 
     private String password;
