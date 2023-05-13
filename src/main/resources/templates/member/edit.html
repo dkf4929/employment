@@ -115,6 +115,35 @@
             height: 20px;
             vertical-align: middle;
         }
+
+        .file-upload {
+            display: flex;
+            align-items: center;
+        }
+
+        #fileName {
+            width: calc(100% - 90px);
+            height: 36px;
+            line-height: 36px;
+        }
+
+        .file-change-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px 12px;
+            text-align: center;
+            font-size: 14px;
+            margin-left: 5px;
+            border-radius: 4px;
+            height: 36px;
+            line-height: 20px;
+        }
+        .file-change-button:hover {
+            background-color: #45a049;
+        }
+
     </style>
 </head>
 <body>
@@ -127,7 +156,11 @@
         </div>
         <div class="form-group">
             <label for="photoFile"><b>사진</b></label>
-            <input type="file" name="file" id="file">
+            <input type="file" name="file" id="file" style="display: none">
+            <div class="file-upload">
+                <input type="text" name="fileName" id="fileName" th:value="${member.fileName}" readonly="readonly">
+                <button type="button" id="fileChangeButton" class="file-change-button" onclick="document.getElementById('file').click();">파일 변경</button>
+            </div>
             <img id="viewImage" style="width: 100%;">
         </div>
         <div class="form-group">
@@ -145,13 +178,12 @@
         <div class="form-group">
             <label for="schoolName"><b>최종학력</b></label>
             <div style="display: flex">
-                <input type="text" name="schoolName" id="schoolName" required>
+                <input type="text" name="schoolName" id="schoolName" required th:value="${member.schoolName}" readonly="readonly">
                 <button class="search-button" id="school_search" onclick="schoolSearch()" type="button">
                     <img src="/image/search_icon.png" alt="Search">
                 </button>
             </div>
         </div>
-        <img src="" alt="Search" id="photo">
         <div class="clearfix">
             <button type="submit" id="save" class="savebtn">save</button>
         </div>
@@ -200,18 +232,17 @@
         if (fileInput.files && fileInput.files.length > 0) {
             const file = fileInput.files[0];
 
-            if (file.type.match('image.*')) {
-                const reader = new FileReader();
+            // 파일명을 fileName 필드에 설정
+            document.getElementById('fileName').value = fileInput.files[0].name;
 
-                reader.onload = function(event) {
-                    imagePreviewElement.src = event.target.result;
-                }
+            const reader = new FileReader();
 
-                reader.readAsDataURL(file);
-            } else {
-                imagePreviewElement.src = '';
-                alert('이미지 파일을 선택해주세요.');
+            reader.onload = function(event) {
+                imagePreviewElement.src = event.target.result;
             }
+
+            reader.readAsDataURL(file);
+
         } else {
             imagePreviewElement.src = '';
         }
@@ -235,14 +266,6 @@
 
     const myForm = document.getElementById("myForm");
     const submitBtn = document.getElementById("save");
-
-    submitBtn.addEventListener("click", (event) => {
-        if (sCount == 0) {
-            event.preventDefault(); // 폼 제출 취소
-            alert('학교를 검색해주세요.');
-            return;
-        }
-    });
 
     myForm.addEventListener('submit', event => {
         event.preventDefault();
