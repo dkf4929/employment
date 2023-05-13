@@ -4,6 +4,7 @@ import com.project.employment.dto.MemberSaveDto;
 import com.project.employment.dto.MemberUpdateDto;
 import com.project.employment.entity.Member;
 import com.project.employment.exception.ConfirmPasswordMismatchException;
+import com.project.employment.exception.FileExtensionException;
 import com.project.employment.exception.InvalidFieldException;
 import com.project.employment.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -46,17 +48,28 @@ public class MemberService {
         try {
             Member savedMember = memberRepository.save(dto.dtoToEntity());
             // 파일 저장
-            if (!dto.getFile().isEmpty()) {
-                String fileName = dto.getFile().getOriginalFilename();
 
-                byte[] bytes = dto.getFile().getBytes();
-                Path path = Paths.get(savedMember.getId() + "/upload/" + fileName);
-                Files.createDirectories(path.getParent());
-                Files.write(path, bytes);
+            if (!dto.getFile().isEmpty()) {
+                fileUpload(dto.getFile(), savedMember);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void fileUpload(MultipartFile file, Member member) throws IOException {
+        String fileName = file.getOriginalFilename();
+        String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()).toLowerCase();
+
+        if (!List.of("jpg", "jpeg", "png").contains(ext)) {
+            throw new FileExtensionException("jpg, jpeg, png 형식의 파일만 업로드 가능합니다.");
+        }
+
+        byte[] bytes = file.getBytes();
+        Path path = Paths.get(member.getId() + "/upload/" + fileName);
+        Files.createDirectories(path.getParent());
+        Files.write(path, bytes);
+
     }
 
     public void edit(MemberUpdateDto dto, BindingResult bindingResult) {
@@ -67,17 +80,26 @@ public class MemberService {
         Member member = memberRepository.findByEmail(dto.getEmail()).get();
         String date = dto.getBirthday().replace("-", "");
 
-        member.setEditYn("Y");
-        member.setMemberName(dto.getMemberName());
-        member.setBirthday(LocalDate.of(
-                Integer.valueOf(date.substring(0, 4)),
-                Integer.valueOf(date.substring(4, 6)),
-                Integer.valueOf(date.substring(6, 8))));
-        member.setPhoneNumber(dto.getPhoneNumber());
-        member.setEmail(dto.getEmail());
-        member.setSchoolName(dto.getSchoolName());
-        member.setSocialLoginYn("Y");
+        try {
 
-        entityManager.persist(member);
+            member.setEditYn("Y");
+            member.setMemberName(dto.getMemberName());
+            member.setBirthday(LocalDate.of(
+                    Integer.valueOf(date.substring(0, 4)),
+                    Integer.valueOf(date.substring(4, 6)),
+                    Integer.valueOf(date.substring(6, 8))));
+            member.setPhoneNumber(dto.getPhoneNumber());
+            member.setEmail(dto.getEmail());
+            member.setSchoolName(dto.getSchoolName());
+            member.setSocialLoginYn("Y");
+            member.setFile(dto.getFile().getBytes());
+            member.setFileName(dto.getFileName());
+
+            if (!dto.getFile().isEmpty()) {
+                fileUpload(dto.getFile(), member);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
