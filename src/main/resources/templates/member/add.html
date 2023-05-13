@@ -245,19 +245,13 @@
 
         if (fileInput.files && fileInput.files.length > 0) {
             const file = fileInput.files[0];
+            const reader = new FileReader();
 
-            if (file.type.match('image.*')) {
-                const reader = new FileReader();
-
-                reader.onload = function(event) {
-                    imagePreviewElement.src = event.target.result;
-                }
-
-                reader.readAsDataURL(file);
-            } else {
-                imagePreviewElement.src = '';
-                alert('이미지 파일을 선택해주세요.');
+            reader.onload = function(event) {
+                imagePreviewElement.src = event.target.result;
             }
+
+            reader.readAsDataURL(file);
         } else {
             imagePreviewElement.src = '';
         }
