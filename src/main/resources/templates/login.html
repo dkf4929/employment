@@ -94,7 +94,8 @@
             <input type="password" placeholder="Enter Password" name="password" required>
         </div>
         <div class="clearfix">
-            <button type="submit" id="submit" class="signupbtn">Login</button>
+            <button type="submit" id="login_private" class="signupbtn">개인회원 로그인</button>
+            <button type="submit" id="login_company" class="signupbtn">기업 로그인</button>
         </div>
     </form>
     <!-- 추가 버튼 -->
@@ -103,7 +104,7 @@
     </div>
     <!-- 비밀번호 찾기 -->
     <div class="link">
-        <a href="/member/add">회원가입</a></br>
+        <a href="/register">회원가입</a></br>
         <a href="#">비밀번호 찾기</a>
     </div>
 </div>
@@ -113,7 +114,7 @@
         window.location.href = "/oauth2/authorization/google";
     }
 
-    myForm.addEventListener('submit', event => {
+    myForm.addEventListener('login_private', event => {
         event.preventDefault();
 
         const formData = new FormData(myForm);

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Centered Buttons</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+        }
+        .button-container button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 40px;
+            width: 600px;
+            height: 200px;
+        }
+        .button-container button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="button-container">
+    <button type="button" id="register_priv" onclick="location.href='/member/add'">개인 회원가입</button>
+    <button type="button" id="register_comp" onclick="location.href='/company/add'">기업 회원가입</button>
+</div>
+</body>
+</html>
