@@ -20,13 +20,16 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "member",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "loginId", name = "uk_login_id"),
+                @UniqueConstraint(columnNames = "email", name = "uk_email")})
 @ToString
 public class Member implements UserDetails {
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
     private String loginId;
 
     private String password;
