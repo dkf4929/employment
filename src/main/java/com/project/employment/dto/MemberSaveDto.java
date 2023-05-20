@@ -1,5 +1,6 @@
 package com.project.employment.dto;
 
+import com.project.employment.annotation.PasswordMatch;
 import com.project.employment.entity.Member;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 @Data
+@PasswordMatch
 public class MemberSaveDto {
     @NotBlank
     @Length(min = 2, max = 30)
@@ -21,7 +23,6 @@ public class MemberSaveDto {
     private String password;
 
     @NotBlank
-    @Length(min = 8, max = 50, message = "비밀번호는 8자리 이상 50자리 이하여야 합니다.")
     private String confirmPassword;
 
     private MultipartFile file;

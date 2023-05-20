@@ -1,19 +1,16 @@
 package com.project.employment.exception;
 
-public class InvalidFieldException extends CommonException {
-    public InvalidFieldException() {
-        super();
-    }
+import com.project.employment.error.Errors;
+import org.springframework.core.MethodParameter;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
-    public InvalidFieldException(String message) {
-        super(message);
-    }
+import java.lang.reflect.Executable;
 
-    public InvalidFieldException(String message, Throwable cause) {
-        super(message, cause);
-    }
+public class InvalidFieldException extends MethodArgumentNotValidException {
+    private Errors errors;
 
-    public InvalidFieldException(Throwable cause) {
-        super(cause);
+    public InvalidFieldException(MethodParameter parameter, BindingResult bindingResult) {
+        super(parameter, bindingResult);
     }
 }

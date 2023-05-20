@@ -44,8 +44,8 @@ public class MemberController {
     }
 
     @PostMapping("/add")
-    public void save(@Valid MemberSaveDto dto, BindingResult bindingResult) throws IOException {
-        memberService.save(dto, bindingResult);
+    public void save(@Valid MemberSaveDto dto) throws IOException {
+        memberService.save(dto);
     }
 
     @GetMapping("/{memberId}")

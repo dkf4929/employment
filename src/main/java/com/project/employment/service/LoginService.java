@@ -3,8 +3,7 @@ package com.project.employment.service;
 import com.project.employment.common.HttpSuplier;
 import com.project.employment.dto.LoginDto;
 import com.project.employment.entity.Member;
-import com.project.employment.exception.NoSuchUserException;
-import com.project.employment.exception.PasswordMismatchException;
+import com.project.employment.exception.LoginIdOrPasswordException;
 import com.project.employment.jwt.JwtTokenProvider;
 import com.project.employment.repository.MemberRepository;
 import jakarta.servlet.http.Cookie;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,11 +24,11 @@ public class LoginService {
 
     public String login(LoginDto dto) {
         Member findMember = memberRepository.findByLoginId(dto.getLoginId()).orElseThrow(() -> {
-            throw new NoSuchUserException("등록된 사용자가 아닙니다.");
+            throw new LoginIdOrPasswordException();
         });
 
         if (!passwordEncoder.matches(dto.getPassword(), findMember.getPassword()))
-            throw new PasswordMismatchException("비밀번호가 일치하지 않습니다.");
+            throw new LoginIdOrPasswordException();
 
         String token = tokenProvider.createToken(findMember.getLoginId(), List.of("ROLE_USER"));
         Cookie cookie = new Cookie("jwtToken", token);

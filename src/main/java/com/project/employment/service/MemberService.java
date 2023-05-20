@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,15 +38,7 @@ public class MemberService {
         return new ResponseEntity<>(memberRepository.countByLoginId(loginId), HttpStatus.OK);
     }
 
-    public void save(MemberSaveDto dto, BindingResult bindingResult) {
-        if (bindingResult.hasFieldErrors()) {
-            throw new InvalidFieldException(bindingResult.getFieldError().getDefaultMessage());
-        }
-
-        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
-            throw new ConfirmPasswordMismatchException("비밀번호가 일치하지 않습니다.");
-        }
-
+    public void save(MemberSaveDto dto) {
         try {
             Member savedMember = memberRepository.save(dto.dtoToEntity());
             // 파일 저장
@@ -73,10 +67,6 @@ public class MemberService {
     }
 
     public void edit(MemberUpdateDto dto, BindingResult bindingResult) {
-        if (bindingResult.hasFieldErrors()) {
-            throw new InvalidFieldException(bindingResult.getFieldError().getDefaultMessage());
-        }
-
         Member member = memberRepository.findByEmail(dto.getEmail()).get();
         String date = dto.getBirthday().replace("-", "");
 
