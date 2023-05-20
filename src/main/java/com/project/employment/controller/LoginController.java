@@ -15,7 +15,7 @@ public class LoginController {
     private final LoginService loginService;
 
     @ResponseBody
-    @PostMapping
+    @PostMapping("/priv")
     public String login(LoginDto dto) {
         return loginService.login(dto);
     }

@@ -94,8 +94,8 @@
             <input type="password" placeholder="Enter Password" name="password" required>
         </div>
         <div class="clearfix">
-            <button type="submit" id="login_private" class="signupbtn">개인회원 로그인</button>
-            <button type="submit" id="login_company" class="signupbtn">기업 로그인</button>
+            <button type="button" id="login_private" class="signupbtn" onclick="loginPrivate()">개인회원 로그인</button>
+            <button type="button" id="login_company" class="signupbtn">기업 로그인</button>
         </div>
     </form>
     <!-- 추가 버튼 -->
@@ -114,12 +114,10 @@
         window.location.href = "/oauth2/authorization/google";
     }
 
-    myForm.addEventListener('login_private', event => {
-        event.preventDefault();
-
+    function loginPrivate() {
         const formData = new FormData(myForm);
 
-        fetch('/login', {
+        fetch('/login/priv', {
             method: 'POST',
             body: formData
         }).then(response => {
@@ -131,7 +129,7 @@
         }).catch(error => {
             alert(error.message); // 서버에서 발생한 예외 메시지를 알림 창에 표시
         });
-    });
+    };
 </script>
 
 </body>
