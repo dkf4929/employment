@@ -1,6 +1,7 @@
 package com.project.employment.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.employment.dto.MemberDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -111,6 +112,29 @@ public class Member implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public static Member create(MemberDto memberDto) {
+        Member member = new Member();
+
+        member.id = memberDto.getMemberId();
+        member.loginId = memberDto.getLoginId();
+        member.password = memberDto.getPassword();
+        member.email = memberDto.getEmail();
+        member.memberName = memberDto.getMemberName();
+        String birthday = memberDto.getBirthday().replace("-", "");
+        member.birthday = LocalDate.of(
+                Integer.valueOf(birthday.substring(0, 4)),
+                Integer.valueOf(birthday.substring(4, 6)),
+                Integer.valueOf(birthday.substring(6, 8)));
+        member.phoneNumber = memberDto.getPhoneNumber();
+        member.schoolName = memberDto.getSchoolName();
+        member.file = memberDto.getFile();
+        member.fileName = memberDto.getFileName();
+        member.editYn = memberDto.getEditYn();
+        member.socialLoginYn = memberDto.getSocialLoginYn();
+
+        return member;
     }
 
 }

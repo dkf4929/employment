@@ -1,9 +1,11 @@
 package com.project.employment.controller;
 
+import com.project.employment.dto.MemberDto;
 import com.project.employment.dto.MemberSaveDto;
 import com.project.employment.dto.MemberUpdateDto;
 import com.project.employment.entity.Member;
 import com.project.employment.service.MemberService;
+import com.project.request.MemberRq;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,8 +46,8 @@ public class MemberController {
     }
 
     @PostMapping("/add")
-    public void save(@Valid MemberSaveDto dto) throws IOException {
-        memberService.save(dto);
+    public void save(@Valid MemberRq memberRq) {
+        memberService.saveMember(memberRq);
     }
 
     @GetMapping("/{memberId}")
