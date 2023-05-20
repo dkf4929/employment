@@ -35,8 +35,7 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity handleException(MethodArgumentNotValidException e) {
         log.error("exception", e);
-
-        String message = Optional.ofNullable(e.getFieldError().getDefaultMessage()).orElse(e.getGlobalError().getDefaultMessage());
+        String message = e.getFieldError() == null ? e.getGlobalError().getDefaultMessage() : e.getFieldError().getDefaultMessage();
         ErrorResponse errorResponse = ErrorResponse.of(message);
 
         return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
