@@ -45,26 +45,4 @@ public class MemberSaveDto {
 
     @NotBlank
     private String schoolName;
-
-    public Member dtoToEntity() throws IOException {
-        String date = this.birthday.replace("-", "");
-
-        return Member.builder()
-                .birthday(LocalDate.of(
-                        Integer.valueOf(date.substring(0, 4)),
-                        Integer.valueOf(date.substring(4, 6)),
-                        Integer.valueOf(date.substring(6, 8))))
-                .memberName(this.memberName)
-                .password(new BCryptPasswordEncoder().encode(this.password))
-                .role(new String[]{"ROLE_USER"})
-                .phoneNumber(this.phoneNumber)
-                .email(this.email)
-                .loginId(this.loginId)
-                .schoolName(this.schoolName)
-                .file(this.file.getBytes())
-                .fileName(this.file.getOriginalFilename())
-                .socialLoginYn("N")
-                .build();
-    }
-
 }

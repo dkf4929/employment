@@ -2,6 +2,7 @@ package com.project.employment.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.employment.dto.MemberDto;
+import com.project.employment.dto.MemberUpdateRq;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,10 +46,9 @@ public class Member implements UserDetails {
 
     private String schoolName;
 
-    @Lob
-    private byte[] file;
-
-    private String fileName;
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "member_image_file_id")
+    private MemberImageFile imageFile;
 
     private String editYn; // 구글 로그인 시 프로필에 정보를 입력했는지 여부.
 
@@ -59,7 +59,7 @@ public class Member implements UserDetails {
 
 
     @Builder
-    public Member(String loginId, String password, String email, String memberName, LocalDate birthday, String phoneNumber, String schoolName, String editYn, String socialLoginYn, byte[] file, String fileName, String ... role) {
+    public Member(String loginId, String password, String email, String memberName, LocalDate birthday, String phoneNumber, String schoolName, String editYn, String socialLoginYn, String ... role) {
         this.loginId = loginId;
         this.password = password;
         this.email = email;
@@ -69,8 +69,6 @@ public class Member implements UserDetails {
         this.schoolName = schoolName;
         this.editYn = editYn;
         this.socialLoginYn = socialLoginYn;
-        this.fileName = fileName;
-        this.file = file;
 
         for (String s : role) {
             roles.add(s);
@@ -114,7 +112,7 @@ public class Member implements UserDetails {
         return true;
     }
 
-    public static Member create(MemberDto memberDto) {
+    public static Member create(MemberDto memberDto, MemberImageFile memberImageFile) {
         Member member = new Member();
 
         member.id = memberDto.getMemberId();
@@ -129,12 +127,27 @@ public class Member implements UserDetails {
                 Integer.valueOf(birthday.substring(6, 8)));
         member.phoneNumber = memberDto.getPhoneNumber();
         member.schoolName = memberDto.getSchoolName();
-        member.file = memberDto.getFile();
-        member.fileName = memberDto.getFileName();
+        member.imageFile = memberImageFile;
         member.editYn = memberDto.getEditYn();
         member.socialLoginYn = memberDto.getSocialLoginYn();
+        if (!memberDto.getMemberName().equals("admin")) {
+            member.roles.add("ROLE_USER");
+        } else {
+            member.roles.add("ROLE_ADMIN");
+        }
 
         return member;
     }
 
+    public void update(MemberUpdateRq rq, MemberImageFile memberImageFile) {
+        this.memberName = rq.getMemberName();
+        this.birthday = LocalDate.of(
+                Integer.valueOf(rq.getBirthday().replace("-", "").substring(0, 4)),
+                Integer.valueOf(rq.getBirthday().replace("-", "").substring(4, 6)),
+                Integer.valueOf(rq.getBirthday().replace("-", "").substring(6, 8)));
+        this.email = rq.getEmail();
+        this.phoneNumber = rq.getPhoneNumber();
+        this.imageFile = memberImageFile;
+        this.schoolName = rq.getSchoolName();
+    }
 }

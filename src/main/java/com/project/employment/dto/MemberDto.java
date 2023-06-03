@@ -1,5 +1,6 @@
 package com.project.employment.dto;
 
+import com.project.employment.entity.MemberImageFile;
 import com.project.request.MemberRq;
 import lombok.Getter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,7 +25,7 @@ public class MemberDto {
 
     private String schoolName;
 
-    private byte[] file;
+    private MemberImageFileDto memberImageFileDto;
 
     private String fileName;
 
@@ -35,23 +36,19 @@ public class MemberDto {
     public static MemberDto from(MemberRq memberRq) {
         MemberDto memberDto = new MemberDto();
 
-        try {
-            memberDto.memberId = memberRq.getMemberId();
-            memberDto.loginId = memberRq.getLoginId();
-            memberDto.password = new BCryptPasswordEncoder().encode(memberRq.getPassword());
-            memberDto.email = memberRq.getEmail();
-            memberDto.memberName = memberRq.getMemberName();
-            memberDto.birthday = memberRq.getBirthday();
-            memberDto.phoneNumber = memberRq.getPhoneNumber();
-            memberDto.schoolName = memberRq.getSchoolName();
-            memberDto.file = memberRq.getFile().getBytes();
-            memberDto.fileName = memberRq.getFile().getOriginalFilename();
-            memberDto.editYn = memberRq.getEditYn();
-            memberDto.socialLoginYn = memberRq.getSocialLoginYn();
+        memberDto.memberId = memberRq.getMemberId();
+        memberDto.loginId = memberRq.getLoginId();
+        memberDto.password = new BCryptPasswordEncoder().encode(memberRq.getPassword());
+        memberDto.email = memberRq.getEmail();
+        memberDto.memberName = memberRq.getMemberName();
+        memberDto.birthday = memberRq.getBirthday();
+        memberDto.phoneNumber = memberRq.getPhoneNumber();
+        memberDto.schoolName = memberRq.getSchoolName();
+        memberDto.memberImageFileDto = MemberImageFileDto.from(memberRq.getFile());
+        memberDto.fileName = memberRq.getFile().getOriginalFilename();
+        memberDto.editYn = memberRq.getEditYn();
+        memberDto.socialLoginYn = memberRq.getSocialLoginYn();
 
-            return memberDto;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return memberDto;
     }
 }

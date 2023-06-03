@@ -153,12 +153,13 @@
         <div class="form-group">
             <label for="memberName"><b>성명</b></label>
             <input type="text" name="memberName" id="memberName" required th:value="${member.memberName}">
+            <input type="hidden" name="memberId" id="memberId" required th:value="${member.id}">
         </div>
         <div class="form-group">
             <label for="photoFile"><b>사진</b></label>
             <input type="file" name="file" id="file" style="display: none">
             <div class="file-upload">
-                <input type="text" name="fileName" id="fileName" th:value="${member.fileName}" readonly="readonly">
+                <input type="text" name="fileName" id="fileName" th:value="${member.imageFile.fileName}" readonly="readonly">
                 <button type="button" id="fileChangeButton" class="file-change-button" onclick="document.getElementById('file').click();">파일 변경</button>
             </div>
             <img id="viewImage" style="width: 100%;">
@@ -272,7 +273,7 @@
 
         const formData = new FormData(myForm);
 
-        fetch('/member/edit', {
+        fetch('/member', {
             method: 'PATCH',
             body: formData
         }).then(response => {
