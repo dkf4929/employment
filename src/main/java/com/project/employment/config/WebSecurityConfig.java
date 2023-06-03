@@ -1,4 +1,4 @@
-package com.project.employment.security;
+package com.project.employment.config;
 
 import com.project.employment.common.WhitePath;
 import com.project.employment.handler.GoogleLoginSuccessHandler;
@@ -32,7 +32,7 @@ import java.io.IOException;
 public class WebSecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final GoogleLoginSuccessHandler googleLoginSuccessHandler;
-    private String[] userPath = new String[]{"/member/edit"};
+    private String[] userPath = new String[]{"/member/{memberId}"};
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
