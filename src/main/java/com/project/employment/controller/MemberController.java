@@ -69,10 +69,7 @@ public class MemberController {
 
     @PatchMapping
     @ResponseBody
-    public String edit(@Valid MemberUpdateRq dto, BindingResult bindingResult) throws IOException {
-        memberService.edit(dto, bindingResult);
-        HttpSuplier.getResponse().sendRedirect("/");
-
-        return "저장이 완료되었습니다.";
+    public void edit(@Valid MemberUpdateRq dto) throws IOException {
+        memberService.edit(dto);
     }
 }

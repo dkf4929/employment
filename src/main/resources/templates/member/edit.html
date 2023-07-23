@@ -168,20 +168,20 @@
         </div>
         <div class="form-group">
             <label for="birthday"><b>생년월일</b></label>
-            <input type="date" name="birthday" id="birthday" required th:value="${member.birthday}">
+            <input type="date" name="birthday" id="birthday" th:value="${member.birthday}">
         </div>
         <div class="form-group">
             <label for="email"><b>이메일</b></label>
-            <input type="email" name="email" id="email" required th:value="${member.email}" readonly>
+            <input type="email" name="email" id="email" th:value="${member.email}" readonly>
         </div>
         <div class="form-group">
             <label for="email"><b>핸드폰 번호</b></label>
-            <input type="text" name="phoneNumber"  id="phoneNumber" required th:value="${member.phoneNumber}">
+            <input type="text" name="phoneNumber"  id="phoneNumber" th:value="${member.phoneNumber}">
         </div>
         <div class="form-group">
             <label for="schoolName"><b>최종학력</b></label>
             <div style="display: flex">
-                <input type="text" name="schoolName" id="schoolName" required th:value="${member.schoolName}" readonly="readonly">
+                <input type="text" name="schoolName" id="schoolName" th:value="${member.schoolName}" readonly="readonly">
                 <button class="search-button" id="school_search" onclick="schoolSearch()" type="button">
                     <img src="/image/search_icon.png" alt="Search">
                 </button>
@@ -279,9 +279,7 @@
             method: 'PATCH',
             body: formData
         }).then(response => {
-            if (!response.ok) {
-                return response.text().then(error => { throw new Error(error); });
-            }
+            if (!response.ok) return response.text().then(error => { throw new Error(error); });
         }).then(data => {
         }).catch(error => {
             alert(error.message); // 서버에서 발생한 예외 메시지를 알림 창에 표시
