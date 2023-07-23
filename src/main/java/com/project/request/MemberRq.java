@@ -10,7 +10,8 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
-@Data
+@Getter
+@Setter
 @PasswordMatch
 public class MemberRq {
     private Long memberId;

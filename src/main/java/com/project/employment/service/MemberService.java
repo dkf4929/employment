@@ -59,14 +59,14 @@ public class MemberService {
         }
     }
 
-    public void edit(MemberUpdateRq rq, BindingResult bindingResult) {
+    public void edit(MemberUpdateRq rq) {
         Member member = findById(rq.getMemberId());
         try {
 
             member.update(rq, MemberImageFile.create(rq.getFile()));
             member.setSocialLoginYn("Y");
 
-            if (!ObjectUtils.isEmpty(rq.getFile())) {
+            if (!ObjectUtils.isEmpty(rq.getFile().getBytes())) {
                 fileUpload(rq.getFile(), member);
             }
         } catch (IOException e) {
