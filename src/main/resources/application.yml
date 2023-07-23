@@ -5,7 +5,7 @@ spring:
     include: oauth
   datasource:
     username: root
-    password: win!@3456
+    password: qwer1234
     url: jdbc:mysql://localhost:3306/employment
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
