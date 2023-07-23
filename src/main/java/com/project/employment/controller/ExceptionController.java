@@ -40,4 +40,13 @@ public class ExceptionController {
 
         return ResponseEntity.status(e.getStatusCode()).body(errorResponse);
     }
+
+    @ExceptionHandler(BusinessException.class)
+    protected ResponseEntity handleException(BusinessException e) {
+        log.error("exception", e);
+        String message = e.getMessage();
+        ErrorResponse errorResponse = ErrorResponse.of(message);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
 }

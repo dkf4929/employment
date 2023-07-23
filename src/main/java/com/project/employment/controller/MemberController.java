@@ -1,7 +1,10 @@
 package com.project.employment.controller;
 
+import com.project.employment.common.HttpSuplier;
 import com.project.employment.dto.MemberUpdateRq;
 import com.project.employment.entity.Member;
+import com.project.employment.exception.BusinessException;
+import com.project.employment.exception.CommonException;
 import com.project.employment.service.MemberService;
 import com.project.request.MemberRq;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,9 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.AuthenticationException;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -51,18 +56,22 @@ public class MemberController {
 
         if (!principal.getId().equals(memberId)) {
             response.sendRedirect("/");
+
+            throw new BusinessException("인증 에러");
         }
 
         model.addAttribute("member", loginMember);
-        model.addAttribute("file", Base64.getEncoder().encodeToString(loginMember.getImageFile().getFile()));
+
+        if (!ObjectUtils.isEmpty(loginMember.getImageFile())) model.addAttribute("file", Base64.getEncoder().encodeToString(loginMember.getImageFile().getFile()));
 
         return "member/edit";
     }
 
     @PatchMapping
     @ResponseBody
-    public String edit(@Valid MemberUpdateRq dto, BindingResult bindingResult) {
+    public String edit(@Valid MemberUpdateRq dto, BindingResult bindingResult) throws IOException {
         memberService.edit(dto, bindingResult);
+        HttpSuplier.getResponse().sendRedirect("/");
 
         return "저장이 완료되었습니다.";
     }
