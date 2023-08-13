@@ -159,29 +159,28 @@
             <label for="photoFile"><b>사진</b></label>
             <input type="file" name="file" id="file" style="display: none">
             <div class="file-upload">
-                <input type="text" name="fileName" id="fileName" th:if="${member.imageFile != null}" th:value="${member.imageFile.fileName}" readonly="readonly">
-                <input type="text" name="fileName" id="fileName" th:unless="${member.imageFile != null}" readonly="readonly">
-                <button th:if="${member.imageFile != null}" type="button" id="fileChangeButton" class="file-change-button" onclick="document.getElementById('file').click();">파일 변경</button>
-                <button th:unless="${member.imageFile != null}" type="button" id="fileUploadButton" class="file-change-button" onclick="document.getElementById('file').click();">파일 등록</button>
+                <input type="text" name="fileName" id="fileName" th:value="${member.imageFile?.fileName}" readonly="readonly">
+                <button type="button" id="fileChangeBtn" class="file-change-button" th:if="${member.imageFile != null}" onclick="document.getElementById('file').click();">파일 변경</button>
+                <button type="button" id="fileUploadBtn" class="file-change-button" th:unless="${member.imageFile != null}" onclick="document.getElementById('file').click();">파일 등록</button>
             </div>
             <img id="viewImage" style="width: 100%;">
         </div>
         <div class="form-group">
             <label for="birthday"><b>생년월일</b></label>
-            <input type="date" name="birthday" id="birthday" th:value="${member.birthday}">
+            <input type="date" name="birthday" id="birthday" required th:value="${member.birthday}">
         </div>
         <div class="form-group">
             <label for="email"><b>이메일</b></label>
-            <input type="email" name="email" id="email" th:value="${member.email}" readonly>
+            <input type="email" name="email" id="email" required th:value="${member.email}" readonly>
         </div>
         <div class="form-group">
             <label for="email"><b>핸드폰 번호</b></label>
-            <input type="text" name="phoneNumber"  id="phoneNumber" th:value="${member.phoneNumber}">
+            <input type="text" name="phoneNumber"  id="phoneNumber" required th:value="${member.phoneNumber}">
         </div>
         <div class="form-group">
             <label for="schoolName"><b>최종학력</b></label>
             <div style="display: flex">
-                <input type="text" name="schoolName" id="schoolName" th:value="${member.schoolName}" readonly="readonly">
+                <input type="text" name="schoolName" id="schoolName" required th:value="${member.schoolName}" readonly="readonly">
                 <button class="search-button" id="school_search" onclick="schoolSearch()" type="button">
                     <img src="/image/search_icon.png" alt="Search">
                 </button>
@@ -208,16 +207,10 @@
     window.onload = function() {
         const base64ImageData = `[[${file}]]`;
 
-        if (base64ImageData) {
-            const binaryData = atob(base64ImageData);
+        if (base64ImageData && base64ImageData !== "null") { // null이 아니거나 "null" 문자열이 아닌 경우에만 처리
+            const imageByteArray = new Uint8Array(atob(base64ImageData).split('').map(char => char.charCodeAt(0)));
 
-            const imageByteArray = new Uint8Array(binaryData.length);
-            for (let i = 0; i < binaryData.length; i++) {
-                imageByteArray[i] = binaryData.charCodeAt(i);
-            }
-
-            const arrayBuffer = imageByteArray.buffer;
-            const blob = new Blob([arrayBuffer], {type: 'image/jpeg'}); // 이미지 형식에 따라 'image/png' 또는 'image/gif' 등으로 변경 가능
+            const blob = new Blob([imageByteArray], { type: 'image/jpeg' });
 
             const imageUrl = URL.createObjectURL(blob);
 
@@ -226,17 +219,28 @@
             img.alt = '이미지를 불러올 수 없습니다';
             img.style.width = '100%';
         }
+
+        const fileInput = document.getElementById('file');
+
+        if (fileInput.files && fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.readAsDataURL(file);
+
+        }
     };
 
     document.getElementById('file').addEventListener('change', function(e) {
         const fileInput = e.target;
         const imagePreviewElement = document.getElementById('viewImage');
+        const fileNameInput = document.getElementById('fileName');
 
         if (fileInput.files && fileInput.files.length > 0) {
             const file = fileInput.files[0];
 
-            // 파일명을 fileName 필드에 설정
-            document.getElementById('fileName').value = fileInput.files[0].name;
+            fileNameInput.style.display = 'block';
+            fileNameInput.value = fileInput.files[0].name;
 
             const reader = new FileReader();
 
@@ -247,6 +251,8 @@
             reader.readAsDataURL(file);
 
         } else {
+            fileNameInput.style.display = 'none';
+            fileNameInput.value = '';
             imagePreviewElement.src = '';
         }
     });
@@ -279,7 +285,9 @@
             method: 'PATCH',
             body: formData
         }).then(response => {
-            if (!response.ok) return response.text().then(error => { throw new Error(error); });
+            if (!response.ok) {
+                return response.text().then(error => { throw new Error(error); });
+            }
         }).then(data => {
         }).catch(error => {
             alert(error.message); // 서버에서 발생한 예외 메시지를 알림 창에 표시

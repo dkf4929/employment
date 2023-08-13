@@ -66,9 +66,7 @@ public class MemberService {
             member.update(rq, MemberImageFile.create(rq.getFile()));
             member.setSocialLoginYn("Y");
 
-            if (!ObjectUtils.isEmpty(rq.getFile().getBytes())) {
-                fileUpload(rq.getFile(), member);
-            }
+            if (!rq.getFile().isEmpty()) fileUpload(rq.getFile(), member);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
