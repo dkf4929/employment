@@ -1,10 +1,7 @@
 package com.project.employment.controller;
 
-import com.project.employment.common.HttpSuplier;
 import com.project.employment.dto.MemberUpdateRq;
 import com.project.employment.entity.Member;
-import com.project.employment.exception.BusinessException;
-import com.project.employment.exception.CommonException;
 import com.project.employment.service.MemberService;
 import com.project.request.MemberRq;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,11 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.AuthenticationException;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -49,27 +44,27 @@ public class MemberController {
         memberService.saveMember(memberRq);
     }
 
-    @GetMapping("{memberId}") //로그인한 유저가 다른 아이디로 url에 강제로 id입력 시 에러처리 필요.
+    @GetMapping("{memberId}")
     public String edit(Model model, @PathVariable Long memberId, HttpServletResponse response) throws IOException {
         Member loginMember = memberService.findById(memberId);
         Member principal = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (!principal.getId().equals(memberId)) {
-            response.sendRedirect("/");
-
-            throw new BusinessException("인증 에러");
-        }
+        if (!principal.getId().equals(memberId)) response.sendRedirect("/");
 
         model.addAttribute("member", loginMember);
 
-        if (!ObjectUtils.isEmpty(loginMember.getImageFile())) model.addAttribute("file", Base64.getEncoder().encodeToString(loginMember.getImageFile().getFile()));
+        if (loginMember.getImageFile() != null) {
+            model.addAttribute("file", Base64.getEncoder().encodeToString(loginMember.getImageFile().getFile()));
+        }
 
         return "member/edit";
     }
 
     @PatchMapping
     @ResponseBody
-    public void edit(@Valid MemberUpdateRq dto) throws IOException {
+    public String edit(@Valid MemberUpdateRq dto) {
         memberService.edit(dto);
+
+        return "저장이 완료되었습니다.";
     }
 }
