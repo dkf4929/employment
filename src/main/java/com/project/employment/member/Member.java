@@ -1,17 +1,13 @@
-package com.project.employment.entity;
+package com.project.employment.member;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.project.employment.dto.MemberDto;
-import com.project.employment.dto.MemberUpdateRq;
+import com.project.employment.attach.AttachFile;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +25,8 @@ import java.util.stream.Collectors;
 @ToString
 public class Member implements UserDetails {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
     private Long id;
 
     private String loginId;
@@ -46,9 +43,9 @@ public class Member implements UserDetails {
 
     private String schoolName;
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "member_image_file_id")
-    private MemberImageFile imageFile;
+    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @Where(clause = "attach_entity = 'MEMBER'")
+    private List<AttachFile> attachFile;
 
     private String editYn; // 구글 로그인 시 프로필에 정보를 입력했는지 여부.
 
@@ -112,7 +109,7 @@ public class Member implements UserDetails {
         return true;
     }
 
-    public static Member create(MemberDto memberDto, MemberImageFile memberImageFile) {
+    public static Member create(MemberDto memberDto, List<AttachFile> attachFile) {
         Member member = new Member();
 
         member.id = memberDto.getMemberId();
@@ -127,7 +124,7 @@ public class Member implements UserDetails {
                 Integer.valueOf(birthday.substring(6, 8)));
         member.phoneNumber = memberDto.getPhoneNumber();
         member.schoolName = memberDto.getSchoolName();
-        member.imageFile = memberImageFile;
+        member.attachFile = attachFile;
         member.editYn = memberDto.getEditYn();
         member.socialLoginYn = memberDto.getSocialLoginYn();
         if (!memberDto.getMemberName().equals("admin")) {
@@ -139,15 +136,15 @@ public class Member implements UserDetails {
         return member;
     }
 
-    public void update(MemberUpdateRq rq, MemberImageFile memberImageFile) {
-        this.memberName = rq.getMemberName();
+    public void update(MemberDto dto, List<AttachFile> attachFile) {
+        this.memberName = dto.getMemberName();
         this.birthday = LocalDate.of(
-                Integer.valueOf(rq.getBirthday().replace("-", "").substring(0, 4)),
-                Integer.valueOf(rq.getBirthday().replace("-", "").substring(4, 6)),
-                Integer.valueOf(rq.getBirthday().replace("-", "").substring(6, 8)));
-        this.email = rq.getEmail();
-        this.phoneNumber = rq.getPhoneNumber();
-        this.imageFile = memberImageFile;
-        this.schoolName = rq.getSchoolName();
+                Integer.valueOf(dto.getBirthday().replace("-", "").substring(0, 4)),
+                Integer.valueOf(dto.getBirthday().replace("-", "").substring(4, 6)),
+                Integer.valueOf(dto.getBirthday().replace("-", "").substring(6, 8)));
+        this.email = dto.getEmail();
+        this.phoneNumber = dto.getPhoneNumber();
+        this.attachFile = attachFile;
+        this.schoolName = dto.getSchoolName();
     }
 }

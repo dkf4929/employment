@@ -1,19 +1,19 @@
-package com.project.request;
+package com.project.employment.member;
 
 import com.project.employment.annotation.PasswordMatch;
+import com.project.employment.attach.AttachFileDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
 @Setter
 @PasswordMatch
-public class MemberRq {
+public class MemberUpsertRq {
     private Long memberId;
 
     @NotBlank
@@ -24,10 +24,10 @@ public class MemberRq {
     @Length(min = 8, max = 50, message = "비밀번호는 8자리 이상 50자리 이하여야 합니다.")
     private String password;
 
-    @NotBlank
+    @NotBlank(groups = {MemberSaveValid.class})
     private String confirmPassword;
 
-    private MultipartFile file;
+    private List<Long> attachFileIds;
 
     @NotBlank
     @Length(min = 2, max = 50)

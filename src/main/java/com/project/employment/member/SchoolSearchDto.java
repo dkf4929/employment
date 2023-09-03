@@ -1,4 +1,4 @@
-package com.project.employment.dto;
+package com.project.employment.member;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

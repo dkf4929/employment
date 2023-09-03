@@ -1,9 +1,6 @@
-package com.project.employment.dto;
+package com.project.employment.member;
 
-import com.project.employment.entity.Member;
-import com.project.employment.entity.MemberImageFile;
 import jakarta.persistence.Lob;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
