@@ -1,0 +1,50 @@
+.username-check-message {
+    color: red;
+    margin-top: 10px;
+    display: none;
+}
+
+.search-button {
+    border: black;
+    cursor: pointer;
+    display: inline-block;
+    width: 70px;
+    height: 45px;
+    margin-left: 5px;
+    margin-top: 8px;
+    vertical-align: top;
+}
+
+.search-button img {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
+
+.file-upload {
+    display: flex;
+    align-items: center;
+}
+
+#fileName {
+    width: calc(100% - 90px);
+    height: 36px;
+    line-height: 36px;
+}
+
+.file-change-button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 14px;
+    margin-left: 5px;
+    border-radius: 4px;
+    height: 36px;
+    line-height: 20px;
+}
+.file-change-button:hover {
+    background-color: #45a049;
+}

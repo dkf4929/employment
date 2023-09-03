@@ -1,0 +1,74 @@
+.container {
+    background-color: #FFFFFF;
+    border: 1px solid #DDDDDD;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px #DDDDDD;
+    width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+}
+h1 {
+    text-align: center;
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #F7F7F7;
+}
+input {
+    width: 100%;
+    padding: 14px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+button {
+    background-color: darkcyan;
+    color: black;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    float: right;
+    width: auto;
+    font-weight: bold;
+    white-space: nowrap;
+}
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+}
+img.avatar {
+    width: 30%;
+    border-radius: 50%;
+}
+.container > form > .form-group > label {
+    font-weight: bold;
+}
+.container > form > .form-group > input[type=text]:focus, .container > form > .form-group > input[type=password]:focus {
+    background-color: #f9f9f9;
+}
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+.link {
+    text-align: center;
+}
+.link a {
+    color: #333;
+    text-decoration: none;
+}
+.field {
+    display: flex;
+    align-items: center;
+}
+
+.field button.field-button {
+    margin-left: 10px;
+    width: 35%;
+}

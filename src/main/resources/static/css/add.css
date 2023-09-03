@@ -1,0 +1,27 @@
+/* 추가 디자인 */
+.google-btn {
+    background-color: #DB4437;
+    color: white;
+}
+.username-check-message {
+    color: red;
+    margin-top: 10px;
+    display: none;
+}
+
+.search-button {
+    border: black !important;
+    cursor: pointer !important;
+    display: inline-block !important;
+    width: 70px !important;
+    height: 45px !important;
+    margin-left: 5px !important;
+    margin-top: 8px !important;
+    vertical-align: top !important;
+}
+
+.search-button img {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+}
