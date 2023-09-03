@@ -1,6 +1,5 @@
 package com.project.employment.config;
 
-import com.project.employment.common.WhitePath;
 import com.project.employment.enums.AllPermitPath;
 import com.project.employment.handler.GoogleLoginSuccessHandler;
 import com.project.employment.jwt.JwtAuthenticationFilter;
