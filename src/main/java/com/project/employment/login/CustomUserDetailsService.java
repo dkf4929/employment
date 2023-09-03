@@ -1,6 +1,6 @@
-package com.project.employment.service;
+package com.project.employment.login;
 
-import com.project.employment.repository.MemberRepository;
+import com.project.employment.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

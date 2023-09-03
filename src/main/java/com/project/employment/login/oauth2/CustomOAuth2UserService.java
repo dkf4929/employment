@@ -1,16 +1,13 @@
-package com.project.employment.oauth2;
+package com.project.employment.login.oauth2;
 
 import com.project.employment.common.HttpSuplier;
-import com.project.employment.entity.Member;
+import com.project.employment.member.Member;
 import com.project.employment.jwt.JwtTokenProvider;
-import com.project.employment.repository.MemberRepository;
+import com.project.employment.member.MemberRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpSession;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;

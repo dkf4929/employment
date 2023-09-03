@@ -1,6 +1,6 @@
-package com.project.employment.repository;
+package com.project.employment.member;
 
-import com.project.employment.entity.Member;
+import com.project.employment.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

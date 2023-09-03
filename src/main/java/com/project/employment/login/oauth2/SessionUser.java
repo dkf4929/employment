@@ -1,6 +1,6 @@
-package com.project.employment.oauth2;
+package com.project.employment.login.oauth2;
 
-import com.project.employment.entity.Member;
+import com.project.employment.member.Member;
 
 import java.io.Serializable;
 

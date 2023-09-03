@@ -1,8 +1,5 @@
-package com.project.employment.controller;
+package com.project.employment.login;
 
-import com.project.employment.dto.LoginRq;
-import com.project.employment.service.LoginService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +14,7 @@ public class LoginController {
 
     @ResponseBody
     @PostMapping("/priv")
-    public String login(@Valid LoginRq loginRq) {
-        return loginService.login(loginRq);
+    public String login(LoginDto dto) {
+        return loginService.login(dto);
     }
 }

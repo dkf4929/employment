@@ -1,4 +1,4 @@
-package com.project.employment.controller;
+package com.project.employment.exception;
 
 import com.project.employment.error.ErrorResponse;
 import com.project.employment.error.Errors;

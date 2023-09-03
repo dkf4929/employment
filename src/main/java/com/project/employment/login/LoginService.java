@@ -1,11 +1,10 @@
-package com.project.employment.service;
+package com.project.employment.login;
 
 import com.project.employment.common.HttpSuplier;
-import com.project.employment.dto.LoginRq;
-import com.project.employment.entity.Member;
+import com.project.employment.member.Member;
 import com.project.employment.exception.LoginIdOrPasswordException;
 import com.project.employment.jwt.JwtTokenProvider;
-import com.project.employment.repository.MemberRepository;
+import com.project.employment.member.MemberRepository;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +21,7 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
 
-    public String login(LoginRq dto) {
+    public String login(LoginDto dto) {
         Member findMember = memberRepository.findByLoginId(dto.getLoginId()).orElseThrow(() -> {
             throw new LoginIdOrPasswordException();
         });

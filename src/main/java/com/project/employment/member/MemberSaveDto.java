@@ -1,15 +1,10 @@
-package com.project.employment.dto;
+package com.project.employment.member;
 
 import com.project.employment.annotation.PasswordMatch;
-import com.project.employment.entity.Member;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.time.LocalDate;
 
 @Data
 @PasswordMatch
