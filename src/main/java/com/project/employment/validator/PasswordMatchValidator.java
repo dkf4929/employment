@@ -1,8 +1,7 @@
 package com.project.employment.validator;
 
 import com.project.employment.annotation.PasswordMatch;
-import com.project.employment.dto.MemberSaveDto;
-import com.project.request.MemberRq;
+import com.project.employment.member.MemberUpsertRq;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -13,7 +12,7 @@ public class PasswordMatchValidator implements ConstraintValidator<PasswordMatch
 
     @Override
     public boolean isValid(Object obj, ConstraintValidatorContext context) {
-        MemberRq request = (MemberRq) obj;
+        MemberUpsertRq request = (MemberUpsertRq) obj;
         return request.getPassword().equals(request.getConfirmPassword());
     }
 }

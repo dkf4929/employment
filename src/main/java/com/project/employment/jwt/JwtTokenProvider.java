@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
 import java.util.Base64;
@@ -59,10 +60,12 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
+        if (ObjectUtils.isEmpty(request.getCookies())) throw new TokenExpireException("잘못된 경로로 접근하였습니다.");
+
         Cookie cookie = Arrays.stream(request.getCookies())
                 .filter(c -> c.getName().equals("jwtToken"))
                 .findFirst()
-                .orElseThrow(() -> new TokenExpireException("토큰이 만료되었습니다."));
+                .orElseThrow(() -> new TokenExpireException("잘못된 경로로 접근하였습니다."));
 
         return cookie.getValue();
     }

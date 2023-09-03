@@ -1,6 +1,7 @@
 package com.project.employment.jwt;
 
 import com.project.employment.common.WhitePath;
+import com.project.employment.enums.AllPermitPath;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -28,8 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // jwt 인증 필터를 거치지 않을 경로 설정.
         AntPathMatcher pathMatcher = new AntPathMatcher();
 
-        return Arrays.stream(WhitePath.WHITE_LIST)
-                .anyMatch(path -> pathMatcher.match(path, request.getRequestURI()));
+        return Arrays.stream(AllPermitPath.values())
+                .anyMatch(path -> pathMatcher.match(path.getPath(), request.getRequestURI()) || path.getPath().equals(request.getRequestURI()));
     }
 
     @Override
