@@ -1,10 +1,11 @@
 package com.project.employment.config;
 
 import com.project.employment.common.WhitePath;
+import com.project.employment.enums.AllPermitPath;
 import com.project.employment.handler.GoogleLoginSuccessHandler;
 import com.project.employment.jwt.JwtAuthenticationFilter;
 import com.project.employment.jwt.JwtTokenProvider;
-import com.project.employment.oauth2.CustomOAuth2UserService;
+import com.project.employment.login.oauth2.CustomOAuth2UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +25,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
@@ -45,11 +47,14 @@ public class WebSecurityConfig {
         http.csrf().disable();
         http.httpBasic().disable()
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers(WhitePath.WHITE_LIST).permitAll()
+                        .requestMatchers(Arrays.stream(AllPermitPath.values())
+                                .map(AllPermitPath::getPath)
+                                .toArray(String[]::new)).permitAll()
                         .requestMatchers(userPath).hasRole("USER")
-                        .anyRequest().authenticated())
-                    .logout()
-                    .logoutSuccessUrl("/")
+                        .anyRequest().authenticated()
+                )
+                .logout()
+                .logoutSuccessUrl("/")
                 .and()
                 .exceptionHandling().accessDeniedHandler(new AccessDeniedHandler() {
                     @Override
@@ -74,5 +79,6 @@ public class WebSecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
+
 
 }
