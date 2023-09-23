@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: employment-db-container
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=qwer1234
+      - MYSQL_DATABASE=employment
+    ports:
+      - "13306:3306"
+    networks:
+      - employment-network
+
+  spring:
+    container_name: employment
+    image: employment:0.0.1
+    environment:
+      - spring.profiles.active=dev
+    ports:
+      - "8099:8089"
+    networks:
+      - employment-network
