@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    username: root
+    password: qwer1234
+    url: jdbc:mysql://localhost:3306/employment?serverTimezone=UTC&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: false
+    open-in-view: true
+    hibernate:
+      default-schema: employment
+      ddl-auto: none
+  flyway:
+    url: jdbc:mariadb://localhost:3306
+    user: root
+    password: qwer1234
+    schemas:
+      - employment
+    enabled: true
+    createSchemas: true
+    baseline-on-migrate: true
+    locations: classpath:/db

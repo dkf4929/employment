@@ -1,0 +1,10 @@
+school:
+  api-key: "ae97ff80ca48d0d9306cbbd2591a615a"
+spring:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  thymeleaf:
+    cache: false
