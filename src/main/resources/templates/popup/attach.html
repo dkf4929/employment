@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>첨부파일 업로드</title>
+    <link rel="stylesheet" type="text/css" href="/css/common.css">
+    <style>
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>첨부파일 업로드</h1>
+        <form method="post" action="/attach/attachType/{attachType}/entity/{entity}" id="myForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="이미지"><b>이미지</b></label>
+                <div class="field">
+                    <input type="file" name="file" id="file">
+                    <input type="text" name="attachType" id="attachType" th:value="${attachType}" style="display: none">
+                    <input type="text" name="attachEntity" id="attachEntity" th:value="${attachEntity}" style="display: none">
+                </div>
+                <div class="username-check-message"></div>
+            </div>
+            <div class="clearfix">
+                <button type="submit" id="save" class="saveBtn" style="width: 100%">저장</button>
+            </div>
+        </form>
+    </div>
+<script src="/js/attach.js">
+</script>
+</body>
+</html>

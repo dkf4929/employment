@@ -27,8 +27,9 @@ public class AttachFileService {
         });
     }
 
-    public AttachFileRs save(MultipartFile file, AttachType attachType) {
+    public AttachFileRs save(MultipartFile file, AttachType attachType, AttachEntity entity) {
         try {
+
             String fileName = file.getOriginalFilename();
             String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
 
@@ -36,10 +37,10 @@ public class AttachFileService {
                 throw new FileExtensionException("jpg, jpeg, png 형식의 파일만 업로드 가능합니다.");
             }
             String serverFileName = UUID.randomUUID().toString();
-            String filePath = AttachEntity.MEMBER.getType() + "/" + AttachType.IMAGE.getDocument() + "/" + LocalDate.now() + "/" + serverFileName + "." + ext;
+            String filePath = entity + "/" + attachType + "/" + LocalDate.now() + "/" + serverFileName + "." + ext;
 
             AttachFileDto attachFileDto = AttachFileDto.builder()
-                    .attachEntity(AttachEntity.MEMBER)
+                    .attachEntity(entity)
                     .attachType(attachType)
                     .fileName(file.getOriginalFilename())
                     .filePath(filePath)

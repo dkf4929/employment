@@ -16,6 +16,7 @@ public class AttachFile {
     @Enumerated(EnumType.STRING)
     private AttachEntity attachEntity;
 
+    @Column(name = "entity_id")
     private Long entity;
 
     @Enumerated(EnumType.STRING)
