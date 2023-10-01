@@ -32,7 +32,7 @@ public class MemberController {
 
     @GetMapping("/school-search")
     public String schoolSearchPage() {
-        return "member/popup/school-search";
+        return "/popup/school-search";
     }
 
     @PostMapping("/add")
