@@ -10,5 +10,7 @@ create table member (
     phone_number varchar(255),
     school_name varchar(255),
     social_login_yn varchar(255),
+    UNIQUE KEY uk_member_login_id (login_id),
+    UNIQUE KEY uk_member_email (email),
     primary key (member_id)
 ) engine=InnoDB
