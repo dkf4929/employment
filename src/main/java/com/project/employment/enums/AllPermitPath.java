@@ -15,7 +15,7 @@ public enum AllPermitPath {
     MEMBER_SAVE_PATH("/member/add"),
     REGISTER_PATH("/register"),
     COMPANY_SAVE_PATH("/company/add"),
-    ADD_FILE_PATH("/attach-file");
+    ADD_FILE_PATH("/attach/**");
 
 
     private final String path;
