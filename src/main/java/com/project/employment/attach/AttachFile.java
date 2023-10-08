@@ -37,4 +37,8 @@ public class AttachFile {
 
         return attachFile;
     }
+
+    public void updateRelatedEntity(Long sn) {
+        entity = sn;
+    }
 }
