@@ -1,6 +1,5 @@
 package com.project.employment.member;
 
-import com.project.employment.attach.AttachFileDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,20 +33,33 @@ public class MemberDto {
     @Setter
     private String socialLoginYn;
 
-    public static MemberDto from(MemberUpsertRq memberUpsertRq) {
+    public static MemberDto from(MemberInsertRq memberInsertRq) {
         MemberDto memberDto = new MemberDto();
 
-        memberDto.memberId = memberUpsertRq.getMemberId();
-        memberDto.loginId = memberUpsertRq.getLoginId();
-        memberDto.password = new BCryptPasswordEncoder().encode(memberUpsertRq.getPassword());
-        memberDto.email = memberUpsertRq.getEmail();
-        memberDto.memberName = memberUpsertRq.getMemberName();
-        memberDto.birthday = memberUpsertRq.getBirthday();
-        memberDto.phoneNumber = memberUpsertRq.getPhoneNumber();
-        memberDto.schoolName = memberUpsertRq.getSchoolName();
-        memberDto.editYn = memberUpsertRq.getEditYn();
-        memberDto.socialLoginYn = memberUpsertRq.getSocialLoginYn();
-        memberDto.attachFileIds = memberUpsertRq.getAttachFileIds();
+        memberDto.memberId = memberInsertRq.getMemberId();
+        memberDto.loginId = memberInsertRq.getLoginId();
+        memberDto.password = new BCryptPasswordEncoder().encode(memberInsertRq.getPassword());
+        memberDto.email = memberInsertRq.getEmail();
+        memberDto.memberName = memberInsertRq.getMemberName();
+        memberDto.birthday = memberInsertRq.getBirthday();
+        memberDto.phoneNumber = memberInsertRq.getPhoneNumber();
+        memberDto.schoolName = memberInsertRq.getSchoolName();
+        memberDto.editYn = memberInsertRq.getEditYn();
+        memberDto.socialLoginYn = memberInsertRq.getSocialLoginYn();
+        memberDto.attachFileIds = memberInsertRq.getAttachFileId();
+
+        return memberDto;
+    }
+
+    public static MemberDto from(MemberUpdateRq memberUpdateRq) {
+        MemberDto memberDto = new MemberDto();
+
+        memberDto.memberId = memberUpdateRq.getMemberId();
+        memberDto.memberName = memberUpdateRq.getMemberName();
+        memberDto.attachFileIds = memberUpdateRq.getAttachFileId();
+        memberDto.birthday = memberUpdateRq.getBirthday();
+        memberDto.phoneNumber = memberUpdateRq.getPhoneNumber();
+        memberDto.schoolName = memberUpdateRq.getPhoneNumber();
 
         return memberDto;
     }

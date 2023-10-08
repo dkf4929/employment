@@ -3,13 +3,18 @@ package com.project.employment.member;
 import com.project.employment.attach.AttachFile;
 import com.project.employment.attach.AttachFileRepository;
 import com.project.employment.exception.BadRequestException;
+import com.project.employment.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import javax.naming.AuthenticationException;
+import javax.security.auth.login.LoginException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,31 +36,47 @@ public class MemberService {
 
     public void save(MemberDto memberDto) {
         memberDto.setSocialLoginYn("N");
-        Member entity;
         List<AttachFile> attachFiles = attachFileRepo.findAllById(memberDto.getAttachFileIds());
 
-        if (ObjectUtils.isEmpty(memberDto.getMemberId())) {
-            entity = Member.create(memberDto, attachFiles);
-        } else {
-            entity = findById(memberDto.getMemberId());
-            entity.update(memberDto, attachFiles);
-        }
+        Member entity = Member.create(memberDto, attachFiles);
 
-        repo.save(entity);
+        attachFiles.stream().forEach(attachFile -> {
+            memberDto.getAttachFileIds().stream().forEach(sn -> {
+                attachFile.updateRelatedEntity(sn);
+            });
+        });
+
+        try {
+            repo.save(entity);
+        } catch (Exception e) {
+            throw new BusinessException("저장 중 문제가 발생하였습니다.");
+        }
     }
 
-//
-//    private static void fileUpload(MultipartFile file, Member member) throws IOException {
-//        String fileName = file.getOriginalFilename();
-//        String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()).toLowerCase();
-//
-//        if (!List.of("jpg", "jpeg", "png").contains(ext)) {
-//            throw new FileExtensionException("jpg, jpeg, png 형식의 파일만 업로드 가능합니다.");
-//        }
-//
-//        byte[] bytes = file.getBytes();
-//        Path path = Paths.get(member.getId() + "/upload/" + fileName);
-//        Files.createDirectories(path.getParent());
-//        Files.write(path, bytes);
-//    }
+    public void edit(MemberDto dto) {
+        Member loginMember = (Member) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Member member = findById(dto.getMemberId());
+
+        if (loginMember.getId() != member.getId()) throw new BusinessException("잘못된 경로로 접근하였습니다.");
+
+        List<AttachFile> savedFileList = member.getAttachFile();
+        List<AttachFile> attachFileList = attachFileRepo.findAllById(dto.getAttachFileIds());
+
+        if (!attachFileList.containsAll(savedFileList)) { // 파일이 수정된 경우 기존 엔터티 삭제
+            attachFileRepo.deleteAll(savedFileList);
+            member.getAttachFile().clear();
+
+            // 파일 엔터티 업데이트
+            attachFileList.stream().forEach(attachFile -> {
+                attachFile.updateRelatedEntity(member.getId());
+            });
+        }
+
+        // 파일 엔터티 업데이트
+        attachFileList.stream().forEach(attachFile -> {
+            attachFile.updateRelatedEntity(member.getId());
+        });
+
+        member.update(dto, attachFileList);
+    }
 }

@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "loginId", name = "uk_login_id"),
                 @UniqueConstraint(columnNames = "email", name = "uk_email")})
-@ToString
 public class Member implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +42,7 @@ public class Member implements UserDetails {
 
     private String schoolName;
 
-    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "entity", fetch = FetchType.LAZY)
     @Where(clause = "attach_entity = 'MEMBER'")
     private List<AttachFile> attachFile;
 
@@ -142,9 +141,9 @@ public class Member implements UserDetails {
                 Integer.valueOf(dto.getBirthday().replace("-", "").substring(0, 4)),
                 Integer.valueOf(dto.getBirthday().replace("-", "").substring(4, 6)),
                 Integer.valueOf(dto.getBirthday().replace("-", "").substring(6, 8)));
-        this.email = dto.getEmail();
         this.phoneNumber = dto.getPhoneNumber();
         this.attachFile = attachFile;
         this.schoolName = dto.getSchoolName();
+        this.attachFile = attachFile;
     }
 }
