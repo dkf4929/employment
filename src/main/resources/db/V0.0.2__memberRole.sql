@@ -1,5 +1,5 @@
 create table member_roles (
-    role_id bigint not null,
+    role_id bigint not null auto_increment,
     roles varchar(255),
     member_id bigint,
     primary key (role_id),
