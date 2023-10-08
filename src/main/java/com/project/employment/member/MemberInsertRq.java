@@ -1,7 +1,6 @@
 package com.project.employment.member;
 
 import com.project.employment.annotation.PasswordMatch;
-import com.project.employment.attach.AttachFileDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -14,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @PasswordMatch
-public class MemberUpsertRq {
+public class MemberInsertRq {
     private Long memberId;
 
     @NotBlank
@@ -28,7 +27,7 @@ public class MemberUpsertRq {
     @NotBlank(groups = {MemberSaveValid.class})
     private String confirmPassword;
 
-    private List<Long> attachFileIds;
+    private List<Long> attachFileId;
 
     @NotBlank
     @Length(min = 2, max = 50)
